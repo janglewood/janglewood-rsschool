@@ -32,7 +32,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    width: 14%;
+    width: 200px;
 }
 .header-container i:hover {
     cursor: pointer;
@@ -42,11 +42,12 @@ main {
     flex-direction: row;
     width: 100%;
     height: 90%;
+    margin-bottom: 3%;
 }
 .tools-bar-container {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: flex-start;
     align-items: center;
     min-width: 300px;
     width: 25%;
@@ -60,6 +61,7 @@ main {
     box-shadow: 0 1px 3px #0000001f, 0 1px 2px #0000003d;
     border-radius: 2px;
     padding: 10px;
+    margin-bottom: 20%;
 }
 .color-picker-container {
     display: flex;
@@ -97,4 +99,36 @@ main>:nth-child(1)>span:hover {
     border: 1px solid #000000;
     border-radius: 10px;
     margin-right: 15px;
+}
+.color-picker-container>:nth-child(4)>.color-preview {
+    background-color: red;
+}
+.color-picker-container>:nth-child(5)>.color-preview {
+    background-color: blue;
+}
+.palette-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-gap: 2%;
+    width: 600px;
+    height: 600px;
+    margin: 0 auto;
+}
+.squad {
+    display: flex;
+    align-self: center;
+    justify-self: center;
+    width: 100%;
+    height: 100%;
+    background-color: #cccccc;
+}
+.circle {
+    display: flex;
+    align-self: center;
+    justify-self: center;
+    width: 100%;
+    height: 100%;
+    border-radius: 100%;
+    background-color: #cccccc;
 }

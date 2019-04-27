@@ -4,6 +4,7 @@ var cur_color = 'rgb(255, 255, 255)';
 
 var paint_bucket = document.querySelector('.tools-container>:nth-child(1)');
 var choose_color = document.querySelector('.tools-container>:nth-child(2)');
+var transform = document.querySelector('.tools-container>:nth-child(6)');
 var color_palette = document.querySelector('.color-palette');
 
 
@@ -53,5 +54,11 @@ document.querySelector('.palette-container').onclick = function(e) {
         document.querySelector('#prev_color').style.backgroundColor = prev_color;
 
         color_palette.style.display = 'none';
+    } else if(tool_state === 'TRANSFORM') {
+        e.target.className === 'circle' ? e.target.className = 'squad' : e.target.className = 'circle';
     }
-}
+};
+
+transform.onclick = function(e) {
+    tool_state = 'TRANSFORM';
+};

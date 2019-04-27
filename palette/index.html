@@ -26,9 +26,20 @@
                             <i class="fas fa-fill-drip"></i>
                             <span>Paint bucket</span>
                         </span>
-                        <span class="item">
+                        <span class="item" id="choose_color">
                             <i class="fas fa-eye-dropper"></i>
                             <span>Choose color</span>
+                        </span>
+                        <span class="color-palette">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
                         </span>
                         <span class="divider"></span>
                         <span class="item">
@@ -42,19 +53,19 @@
                     </span>
                     <span class="color-picker-container">
                         <span class="item">
-                            <span class="color-preview"></span>
+                            <span class="color-preview" id="cur_color"></span>
                             <span>Current color</span>
                         </span>
                         <span class="item">
-                            <span class="color-preview"></span>
+                            <span class="color-preview" id="prev_color"></span>
                             <span>Previous color</span>
                         </span>
                         <span class="divider"></span>
-                        <span class="item">
+                        <span class="item" id="default-red">
                             <span class="color-preview"></span>
                             <span>red</span>
                         </span>
-                        <span class="item">
+                        <span class="item" id="default-blue">
                             <span class="color-preview"></span>
                             <span>blue</span>
                         </span>
@@ -73,5 +84,6 @@
                 </div>
             </main>
         </div>
+        <script src="index.js"></script>
     </body>
 </html>

@@ -7,9 +7,17 @@ var choose_color = document.querySelector('.tools-container>:nth-child(2)');
 var transform = document.querySelector('.tools-container>:nth-child(6)');
 var color_palette = document.querySelector('.color-palette');
 
+function highlight(tool) {
+    var tools = document.querySelectorAll('.tools-container>.item');
+    for(var i = 0; i < tools.length; i++) {
+        tools[i].style.color = '#000000';
+    }
+    tool.style.color = 'blue';
+};
 
 paint_bucket.onclick = function() {
     tool_state = tool_state === 'PAINT_BUCKET' ? undefined : 'PAINT_BUCKET';
+    highlight(this);
 };
 
 choose_color.onclick = function(e) {
@@ -17,6 +25,7 @@ choose_color.onclick = function(e) {
     color_palette.style.display = 'grid';
     color_palette.style.top = `${e.pageY}px`;
     color_palette.style.left = `${e.pageX}px`;
+    highlight(this);
 };
 
 for(var i = 0; i < document.querySelectorAll('.color-palette>span').length; i++) {
@@ -55,10 +64,11 @@ document.querySelector('.palette-container').onclick = function(e) {
 
         color_palette.style.display = 'none';
     } else if(tool_state === 'TRANSFORM') {
-        e.target.className === 'circle' ? e.target.className = 'squad' : e.target.className = 'circle';
+        getComputedStyle(e.target).borderRadius === '100%' ? e.target.style.borderRadius = '0%' : e.target.style.borderRadius = '100%';
     }
 };
 
 transform.onclick = function(e) {
     tool_state = 'TRANSFORM';
+    highlight(this);
 };

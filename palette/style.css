@@ -160,6 +160,9 @@ main>:nth-child(1)>span:hover {
     height: 600px;
     margin: 0 auto;
 }
+.palette-container>span {
+    transition: border-radius 0.5s ease-out;
+}
 .squad {
     display: flex;
     align-self: center;

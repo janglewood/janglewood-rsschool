@@ -24,7 +24,7 @@ function checkStorage() {
     if(localStorage.getItem('palette_state') !== null) {
         document.querySelector('.palette-container').innerHTML = localStorage.getItem('palette_state');
     }
-};
+}
 
 function highlight(tool) {
     var tools = document.querySelectorAll('.tools-container>.item');
@@ -32,7 +32,7 @@ function highlight(tool) {
         tools[i].style.color = '#000000';
     }
     tool.style.color = 'blue';
-};
+}
 
 function getCoords(elem) {
     var box = elem.getBoundingClientRect();
@@ -40,7 +40,7 @@ function getCoords(elem) {
       top: box.top + pageYOffset,
       left: box.left + pageXOffset
     };
-};
+}
 
 function switchElems(event) {
     var collection = [...document.elementsFromPoint(event.clientX, event.clientY)].filter(item => item.tagName === 'SPAN');
@@ -53,7 +53,7 @@ function switchElems(event) {
         document.querySelector('.origin').style.opacity = '';
         document.querySelector('.origin').className = document.querySelector('.origin').classList[0];
         return;
-    };
+    }
 
     document.querySelector('.clone').remove();
     document.querySelector('.origin').style.backgroundColor = collection[1].style.backgroundColor;
@@ -65,7 +65,7 @@ function switchElems(event) {
     document.querySelector('.origin').className = document.querySelector('.origin').classList[0];
 
     localStorage.setItem('palette_state', document.querySelector('.palette-container').innerHTML);
-};
+}
 
 paint_bucket.onclick = function() {
     tool_state = 'PAINT_BUCKET';
@@ -93,9 +93,9 @@ for(var i = 0; i < document.querySelectorAll('.color-palette>span').length; i++)
 
         color_palette.style.display = 'none';
     }
-};
+}
 
-document.querySelector('#default-red').onclick = function(e) {
+document.querySelector('#default-red').onclick = function() {
     prev_color = cur_color;
     localStorage.setItem('prev_color', cur_color);
     cur_color = '#ff0000';
@@ -104,7 +104,7 @@ document.querySelector('#default-red').onclick = function(e) {
     document.querySelector('#prev_color').style.backgroundColor = prev_color;
 };
 
-document.querySelector('#default-blue').onclick = function(e) {
+document.querySelector('#default-blue').onclick = function() {
     prev_color = cur_color;
     localStorage.setItem('prev_color', cur_color);
     cur_color = '#0000ff';
@@ -148,6 +148,11 @@ document.querySelector('.palette-container').onclick = function(e) {
 };
 
 document.querySelector('.palette-container').onmousedown = function(e) {
+    function moveAt(e, elem) {
+        elem.style.left = e.pageX - shiftX + 'px';
+        elem.style.top = e.pageY - shiftY + 'px';
+    }
+
     if((e.target.className === 'circle' || e.target.className === 'squad') && tool_state === 'MOVE' && !e.target.className.includes('clone')) {
         var clone = e.target.cloneNode();
         clone.className += ' clone';
@@ -168,11 +173,6 @@ document.querySelector('.palette-container').onmousedown = function(e) {
         e.target.style.border = '1px dotted #000000';
         e.target.style.opacity = '0.5';
 
-        function moveAt(e, elem) {
-            elem.style.left = e.pageX - shiftX + 'px';
-            elem.style.top = e.pageY - shiftY + 'px';
-        };
-
         document.onmousemove = function(e) {
             moveAt(e, clone);
         };
@@ -188,7 +188,7 @@ document.querySelector('.palette-container').onmousedown = function(e) {
     }
 };
 
-transform.onclick = function(e) {
+transform.onclick = function() {
     tool_state = 'TRANSFORM';
     localStorage.setItem('tool_state', tool_state);
     highlight(this);

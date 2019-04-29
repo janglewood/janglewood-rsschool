@@ -1,12 +1,29 @@
-var tool_state;
-var prev_color = 'rgb(255, 255, 255)';
-var cur_color = 'rgb(255, 255, 255)';
+window.onload = () => checkStorage();
+var tool_state,
+    prev_color,
+    cur_color;
 
 var paint_bucket = document.querySelector('.tools-container>:nth-child(1)');
-var choose_color = document.querySelector('.tools-container>:nth-child(2)');
+var color_picker = document.querySelector('.tools-container>:nth-child(2)');
 var move = document.querySelector('.tools-container>:nth-child(5)');
 var transform = document.querySelector('.tools-container>:nth-child(6)');
 var color_palette = document.querySelector('.color-palette');
+
+function checkStorage() {
+    if(localStorage.getItem('tool_state') !== null) {
+        tool_state = localStorage.getItem('tool_state');
+        highlight(window[tool_state.toLowerCase()]);
+    }
+    if(localStorage.getItem('cur_color') !== null) {
+        prev_color = localStorage.getItem('prev_color');
+        cur_color = localStorage.getItem('cur_color');
+        document.querySelector('#cur_color').style.backgroundColor = cur_color;
+        document.querySelector('#prev_color').style.backgroundColor = prev_color;
+    }
+    if(localStorage.getItem('palette_state') !== null) {
+        document.querySelector('.palette-container').innerHTML = localStorage.getItem('palette_state');
+    }
+};
 
 function highlight(tool) {
     var tools = document.querySelectorAll('.tools-container>.item');
@@ -17,12 +34,14 @@ function highlight(tool) {
 };
 
 paint_bucket.onclick = function() {
-    tool_state = tool_state === 'PAINT_BUCKET' ? undefined : 'PAINT_BUCKET';
+    tool_state = 'PAINT_BUCKET';
+    localStorage.setItem('tool_state', tool_state);
     highlight(this);
 };
 
-choose_color.onclick = function(e) {
+color_picker.onclick = function(e) {
     tool_state = 'COLOR_PICKER';
+    localStorage.setItem('tool_state', tool_state);
     color_palette.style.display = 'grid';
     color_palette.style.top = `${e.pageY}px`;
     color_palette.style.left = `${e.pageX}px`;
@@ -32,7 +51,9 @@ choose_color.onclick = function(e) {
 for(var i = 0; i < document.querySelectorAll('.color-palette>span').length; i++) {
     document.querySelectorAll('.color-palette>span')[i].onclick = function(e) {
         prev_color = cur_color;
+        localStorage.setItem('prev_color', cur_color);
         cur_color = getComputedStyle(e.target).backgroundColor;
+        localStorage.setItem('cur_color', cur_color);
         document.querySelector('#cur_color').style.backgroundColor = cur_color;
         document.querySelector('#prev_color').style.backgroundColor = prev_color;
 
@@ -42,24 +63,39 @@ for(var i = 0; i < document.querySelectorAll('.color-palette>span').length; i++)
 
 document.querySelector('#default-red').onclick = function(e) {
     prev_color = cur_color;
+    localStorage.setItem('prev_color', cur_color);
     cur_color = '#ff0000';
+    localStorage.setItem('cur_color', cur_color);
     document.querySelector('#cur_color').style.backgroundColor = cur_color;
     document.querySelector('#prev_color').style.backgroundColor = prev_color;
 };
 
 document.querySelector('#default-blue').onclick = function(e) {
     prev_color = cur_color;
+    localStorage.setItem('prev_color', cur_color);
     cur_color = '#0000ff';
+    localStorage.setItem('cur_color', cur_color);
     document.querySelector('#cur_color').style.backgroundColor = cur_color;
     document.querySelector('#prev_color').style.backgroundColor = prev_color;
 };
 
 document.querySelector('.palette-container').onclick = function(e) {
     if(tool_state === 'PAINT_BUCKET') {
-        e.target.className === 'palette-container' ? null : e.target.style.backgroundColor = cur_color;
+        if(e.target.className === 'palette-container') {
+            return;
+        } else {
+            e.target.style.backgroundColor = cur_color;
+            localStorage.setItem('palette_state', document.querySelector('.palette-container').innerHTML);
+        }
     } else if(tool_state === 'COLOR_PICKER') {
         prev_color = cur_color;
-        cur_color = e.target.className === 'palette-container' ? cur_color : getComputedStyle(e.target).backgroundColor;
+        localStorage.setItem('prev_color', cur_color);
+        if(e.target.className === 'palette-container') {
+            localStorage.setItem('cur_color', cur_color);
+        } else {
+            cur_color = getComputedStyle(e.target).backgroundColor;
+            localStorage.setItem('cur_color', cur_color);
+        }
         document.querySelector('#cur_color').style.backgroundColor = cur_color;
         document.querySelector('#prev_color').style.backgroundColor = prev_color;
 
@@ -68,9 +104,11 @@ document.querySelector('.palette-container').onclick = function(e) {
         if(getComputedStyle(e.target).borderRadius === '100%') {
             e.target.style.borderRadius = '0%';
             e.target.className = 'squad';
+            localStorage.setItem('palette_state', document.querySelector('.palette-container').innerHTML);
         } else {
             e.target.style.borderRadius = '100%';
             e.target.className = 'circle';
+            localStorage.setItem('palette_state', document.querySelector('.palette-container').innerHTML);
         }
     }
 };
@@ -145,14 +183,18 @@ function switchElems(event) {
     collection[1].style.backgroundColor = origin_color;
     collection[1].className = origin_className;
     document.querySelector('.origin').className = document.querySelector('.origin').classList[0];
+
+    localStorage.setItem('palette_state', document.querySelector('.palette-container').innerHTML);
 };
 
 transform.onclick = function(e) {
     tool_state = 'TRANSFORM';
+    localStorage.setItem('tool_state', tool_state);
     highlight(this);
 };
 
 move.onclick = function() {
     tool_state = 'MOVE';
+    localStorage.setItem('tool_state', tool_state);
     highlight(this);
 };

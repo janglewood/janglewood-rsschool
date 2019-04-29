@@ -1,4 +1,5 @@
 window.onload = () => checkStorage();
+
 var tool_state,
     prev_color,
     cur_color;
@@ -31,6 +32,39 @@ function highlight(tool) {
         tools[i].style.color = '#000000';
     }
     tool.style.color = 'blue';
+};
+
+function getCoords(elem) {
+    var box = elem.getBoundingClientRect();
+    return {
+      top: box.top + pageYOffset,
+      left: box.left + pageXOffset
+    };
+};
+
+function switchElems(event) {
+    var collection = [...document.elementsFromPoint(event.clientX, event.clientY)].filter(item => item.tagName === 'SPAN');
+    var origin_color = getComputedStyle(document.querySelector('.origin')).backgroundColor;
+    var origin_className = document.querySelector('.origin').className;
+
+    if(collection.length < 2 || (collection[1].className !== 'squad' && collection[1].className !== 'circle')) {
+        document.querySelector('.clone').remove();
+        document.querySelector('.origin').style.border = '';
+        document.querySelector('.origin').style.opacity = '';
+        document.querySelector('.origin').className = document.querySelector('.origin').classList[0];
+        return;
+    };
+
+    document.querySelector('.clone').remove();
+    document.querySelector('.origin').style.backgroundColor = collection[1].style.backgroundColor;
+    document.querySelector('.origin').style.border = '';
+    document.querySelector('.origin').style.opacity = '';
+    document.querySelector('.origin').className = collection[1].className;
+    collection[1].style.backgroundColor = origin_color;
+    collection[1].className = origin_className;
+    document.querySelector('.origin').className = document.querySelector('.origin').classList[0];
+
+    localStorage.setItem('palette_state', document.querySelector('.palette-container').innerHTML);
 };
 
 paint_bucket.onclick = function() {
@@ -113,14 +147,6 @@ document.querySelector('.palette-container').onclick = function(e) {
     }
 };
 
-function getCoords(elem) {
-    var box = elem.getBoundingClientRect();
-    return {
-      top: box.top + pageYOffset,
-      left: box.left + pageXOffset
-    };
-};
-
 document.querySelector('.palette-container').onmousedown = function(e) {
     if((e.target.className === 'circle' || e.target.className === 'squad') && tool_state === 'MOVE' && !e.target.className.includes('clone')) {
         var clone = e.target.cloneNode();
@@ -162,31 +188,6 @@ document.querySelector('.palette-container').onmousedown = function(e) {
     }
 };
 
-function switchElems(event) {
-    var collection = [...document.elementsFromPoint(event.clientX, event.clientY)].filter(item => item.tagName === 'SPAN');
-    var origin_color = getComputedStyle(document.querySelector('.origin')).backgroundColor;
-    var origin_className = document.querySelector('.origin').className;
-
-    if(collection.length < 2 || (collection[1].className !== 'squad' && collection[1].className !== 'circle')) {
-        document.querySelector('.clone').remove();
-        document.querySelector('.origin').style.border = '';
-        document.querySelector('.origin').style.opacity = '';
-        document.querySelector('.origin').className = document.querySelector('.origin').classList[0];
-        return;
-    };
-
-    document.querySelector('.clone').remove();
-    document.querySelector('.origin').style.backgroundColor = collection[1].style.backgroundColor;
-    document.querySelector('.origin').style.border = '';
-    document.querySelector('.origin').style.opacity = '';
-    document.querySelector('.origin').className = collection[1].className;
-    collection[1].style.backgroundColor = origin_color;
-    collection[1].className = origin_className;
-    document.querySelector('.origin').className = document.querySelector('.origin').classList[0];
-
-    localStorage.setItem('palette_state', document.querySelector('.palette-container').innerHTML);
-};
-
 transform.onclick = function(e) {
     tool_state = 'TRANSFORM';
     localStorage.setItem('tool_state', tool_state);
@@ -198,3 +199,29 @@ move.onclick = function() {
     localStorage.setItem('tool_state', tool_state);
     highlight(this);
 };
+
+document.onkeypress = function(e) {
+    if(e.code === 'KeyP') {
+        tool_state = 'PAINT_BUCKET';
+        localStorage.setItem('tool_state', tool_state);
+        highlight(paint_bucket);
+    } else if(e.code ==='KeyC') {
+        tool_state = 'COLOR_PICKER';
+        localStorage.setItem('tool_state', tool_state);
+        color_palette.style.display = 'grid';
+        color_palette.style.top = `${e.pageY}px`;
+        color_palette.style.left = `${e.pageX}px`;
+        highlight(color_picker);
+    } else if(e.code === 'KeyM') {
+        tool_state = 'MOVE';
+        localStorage.setItem('tool_state', tool_state);
+        highlight(move);
+    } else if(e.code === 'KeyT') {
+        tool_state = 'TRANSFORM';
+        localStorage.setItem('tool_state', tool_state);
+        highlight(transform);
+    } else if(e.code === 'Delete') {
+        localStorage.clear();
+        document.location.reload();
+    }
+}

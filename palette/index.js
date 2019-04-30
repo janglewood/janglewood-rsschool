@@ -1,8 +1,8 @@
 window.onload = () => checkStorage();
 
 var tool_state,
-    prev_color,
-    cur_color;
+    prev_color = 'rgb(255, 255, 255)',
+    cur_color = 'rgb(255, 255, 255)';
 
 var paint_bucket = document.querySelector('.tools-container>:nth-child(1)');
 var color_picker = document.querySelector('.tools-container>:nth-child(2)');
@@ -67,6 +67,15 @@ function switchElems(event) {
     localStorage.setItem('palette_state', document.querySelector('.palette-container').innerHTML);
 }
 
+function setDefaultColor(color) {
+    prev_color = cur_color;
+    localStorage.setItem('prev_color', cur_color);
+    cur_color = color;
+    localStorage.setItem('cur_color', cur_color);
+    document.querySelector('#cur_color').style.backgroundColor = cur_color;
+    document.querySelector('#prev_color').style.backgroundColor = prev_color;
+}
+
 paint_bucket.onclick = function() {
     tool_state = 'PAINT_BUCKET';
     localStorage.setItem('tool_state', tool_state);
@@ -82,8 +91,9 @@ color_picker.onclick = function(e) {
     highlight(this);
 };
 
-for(var i = 0; i < document.querySelectorAll('.color-palette>span').length; i++) {
-    document.querySelectorAll('.color-palette>span')[i].onclick = function(e) {
+document.querySelector('.color-palette').onclick = function(e) {
+    if(e.target.className === 'color-palette') return;
+    else {
         prev_color = cur_color;
         localStorage.setItem('prev_color', cur_color);
         cur_color = getComputedStyle(e.target).backgroundColor;
@@ -95,23 +105,9 @@ for(var i = 0; i < document.querySelectorAll('.color-palette>span').length; i++)
     }
 }
 
-document.querySelector('#default-red').onclick = function() {
-    prev_color = cur_color;
-    localStorage.setItem('prev_color', cur_color);
-    cur_color = '#ff0000';
-    localStorage.setItem('cur_color', cur_color);
-    document.querySelector('#cur_color').style.backgroundColor = cur_color;
-    document.querySelector('#prev_color').style.backgroundColor = prev_color;
-};
+document.querySelector('#default-red').onclick = setDefaultColor.bind(this, '#ff0000');
 
-document.querySelector('#default-blue').onclick = function() {
-    prev_color = cur_color;
-    localStorage.setItem('prev_color', cur_color);
-    cur_color = '#0000ff';
-    localStorage.setItem('cur_color', cur_color);
-    document.querySelector('#cur_color').style.backgroundColor = cur_color;
-    document.querySelector('#prev_color').style.backgroundColor = prev_color;
-};
+document.querySelector('#default-blue').onclick = setDefaultColor.bind(this, '#0000ff');
 
 document.querySelector('.palette-container').onclick = function(e) {
     if(tool_state === 'PAINT_BUCKET') {

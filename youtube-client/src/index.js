@@ -1,5 +1,5 @@
-// import App from '';
+import App from './controllers/App';
 
-// const app = new App();
+const app = new App();
 
-// app.start();
+app.start();

@@ -1,26 +1,28 @@
+import Model from '../model/Model';
+
 export default class View {
     constructor(data) {
         this.data = data;
-        this.defaultStyleConfig = {
-            backgroundColor: '#d0d0d0',
-            font: 'Robobo',
-            display: 'flex',
-            flexDirection: 'row',
-        };
     }
 
     initialRender() {
-        const {
-            backgroundColor,
-            font,
-            display,
-            flexDirection,
-        } = this.defaultStyleConfig;
+        const model = new Model(this.data);
 
-        const bodyStyle = document.body.style;
-        bodyStyle.backgroundColor = backgroundColor;
-        bodyStyle.fontFamily = font;
-        bodyStyle.display = display;
-        bodyStyle.flexDirection = flexDirection;
+        const searchInput = document.createElement('input');
+        searchInput.className = 'search-input';
+        searchInput.placeholder = `Enter a string to search (e.g. ${model.getRandomQuerie(this.data.queries)})`;
+
+        const form = document.createElement('form');
+        form.appendChild(searchInput);
+        form.onsubmit = function x(e) {
+            e.preventDefault();
+            model.getData(searchInput.value);
+        };
+
+        const cardContainer = document.createElement('div');
+        cardContainer.className = 'card-container';
+
+        document.body.appendChild(form);
+        document.body.appendChild(cardContainer);
     }
 }

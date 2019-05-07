@@ -1,0 +1,73 @@
+@font-face {
+    font-family: Rubik;
+    src: url('./accets/fonts/Rubik-Regular.ttf');
+}
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: #cdcdcd;
+    margin-top: 2%;
+}
+form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+.search-input {
+    width: 50%;
+    height: 45px;
+    border-radius: 30px;
+    border: 2px solid #85858a;
+    outline: none;
+    padding: 0 10px;
+    font-family: Rubik;
+    font-size: 20px;
+}
+.card-container {
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 15%;
+    min-width: 300px;
+    height: 500px;
+    margin: 0 2%;
+    background-color: #ffffff;
+    border-radius: 15px;
+    overflow: hidden;
+    font-family: Rubik;
+    text-align: center;
+}
+.title {
+    padding: 10px 5px;
+    font-weight: bold;
+}
+.description {
+    padding: 10px 5px;
+}
+.item-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+.item-container i {
+    margin-right: 20px;
+}

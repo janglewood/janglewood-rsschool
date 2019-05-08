@@ -23,6 +23,11 @@ form {
     align-items: center;
     width: 100%;
 }
+a {
+    text-decoration: none;
+    color: #000000;
+    font-size: 20px;
+}
 .search-input {
     width: 50%;
     height: 45px;
@@ -60,14 +65,15 @@ form {
 }
 .description {
     padding: 10px 5px;
+    color: #757575;
 }
 .item-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: 20% 80%;
     align-items: center;
-    width: 100%;
+    width: 60%;
+    margin: 1% auto;
 }
 .item-container i {
-    margin-right: 20px;
+    font-size: 20px;
 }

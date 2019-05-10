@@ -5,7 +5,7 @@ import Model from '../model/Model';
 export default class App {
     constructor() {
         this.state = {
-            token: 'AIzaSyCrp0LVh2k9O4QJZgqWQ3wu-ZQMTPXPlk8',
+            token: 'AIzaSyCTWC75i70moJLzyNh3tt4jzCljZcRkU8Y',
             queries: topQueries,
             randomExample: null,
         };

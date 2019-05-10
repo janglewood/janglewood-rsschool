@@ -43,6 +43,8 @@ a {
     overflow: hidden;
     width: 100%;
     height: 100%;
+    transition: all 0.2s;
+    transform: scale(0.98);
 }
 .card {
     display: flex;
@@ -82,3 +84,15 @@ a {
 .item-container i {
     font-size: 20px;
 }
+.active {
+    cursor: grabbing;
+    transform: scale(1);
+}
+.tip {
+    margin-left: 5px;
+    font-size: 12px;
+}
+.tip:hover {
+    cursor: pointer;
+}
+

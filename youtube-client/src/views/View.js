@@ -13,16 +13,32 @@ export default class View {
 
         const cardContainer = document.createElement('div');
         cardContainer.className = 'card-container';
-        // cardContainer.onmousedown = function scrool(e) {
-        //     let firstTouch = e.pageX;
-        //     cardContainer.onmouseover = function slide(event) {
-        //         if (event.pageX < firstTouch) { cardContainer.style.left = `${0 - (firstTouch - event.pageX)}px`; console.log(getComputedStyle(cardContainer).left, '---', firstTouch - event.pageX); }
-        //         if (event.pageX > firstTouch) console.log('scroll right!');
-        //     };
-        //     cardContainer.onmouseup = function dismiss() {
-        //         firstTouch = NaN;
-        //     };
-        // };
+
+        let mouseIsDown = false;
+        let firstTouch;
+        let scrollLeft;
+        cardContainer.onmousedown = (e) => {
+            mouseIsDown = true;
+            firstTouch = e.pageX - cardContainer.offsetLeft;
+            scrollLeft = cardContainer.scrollLeft;
+            cardContainer.classList.add('active');
+        };
+        cardContainer.onmouseleave = () => {
+            mouseIsDown = false;
+            cardContainer.classList.remove('active');
+        };
+        cardContainer.onmouseup = () => {
+            mouseIsDown = false;
+            cardContainer.classList.remove('active');
+        };
+        cardContainer.onmousemove = (e) => {
+            if (mouseIsDown) {
+                e.preventDefault();
+                const x = e.pageX - cardContainer.offsetLeft;
+                const step = (x - firstTouch) * 1.5;
+                cardContainer.scrollLeft = scrollLeft - step;
+            }
+        };
 
         document.body.appendChild(form);
         document.body.appendChild(cardContainer);
@@ -83,7 +99,18 @@ View.prototype.renderCards = function renderCards(videos) {
             dislikeCount,
         } = item.statistics;
 
+        const tip = document.createElement('span');
+        tip.className = 'tip';
+        tip.innerText = '[...]';
         const titleElement = View.prototype.creatingElement.call(card, 'a', 'title', title);
+        if (title.length > 22) {
+            titleElement.innerText = titleElement.innerText.slice(0, 30);
+            titleElement.appendChild(tip);
+            tip.onclick = (e) => {
+                e.preventDefault();
+                titleElement.innerText = title;
+            };
+        }
         titleElement.href = `https://www.youtube.com/watch?v=${item.id}`;
         titleElement.target = '_blank';
         View.prototype.creatingElement.call(card, 'img', 'image', thumbnails.medium.url);
@@ -92,8 +119,18 @@ View.prototype.renderCards = function renderCards(videos) {
         View.prototype.creatingElement.call(card, 'span', 'view-count', viewCount, '<i class="fas fa-eye"></i>');
         View.prototype.creatingElement.call(card, 'span', 'like-count', likeCount, '<i class="fas fa-thumbs-up"></i>');
         View.prototype.creatingElement.call(card, 'span', 'dislike-count', dislikeCount, '<i class="fas fa-thumbs-down"></i>');
-
-        View.prototype.creatingElement.call(card, 'span', 'description', description);
+        const descriptionElement = View.prototype.creatingElement.call(card, 'span', 'description', description);
+        if (description.length > 65) {
+            const tipClone = tip.cloneNode(true);
+            descriptionElement.innerText = descriptionElement.innerText.slice(0, 65);
+            descriptionElement.appendChild(tipClone);
+            tipClone.onclick = (e) => {
+                e.preventDefault();
+                document.body.style.height = '100%';
+                descriptionElement.innerText = description;
+                card.style.height = '100%';
+            };
+        }
 
         document.querySelector('.card-container').appendChild(card);
     });

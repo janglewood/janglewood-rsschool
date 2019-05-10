@@ -12,7 +12,6 @@ Model.prototype.getRandomQuerie = function getRandomQuerie(queries) {
 Model.prototype.getData = function getData(query) {
     const view = new View(this.data);
     const { token } = this.data;
-    // clear card-container when were is new request
     fetch(`https://www.googleapis.com/youtube/v3/search?key=${token}&type=video&part=snippet&maxResults=15&q=${query}`)
         .then(searchRes => searchRes.json())
         .then((searchList) => {

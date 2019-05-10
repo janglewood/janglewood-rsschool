@@ -13,6 +13,16 @@ export default class View {
 
         const cardContainer = document.createElement('div');
         cardContainer.className = 'card-container';
+        // cardContainer.onmousedown = function scrool(e) {
+        //     let firstTouch = e.pageX;
+        //     cardContainer.onmouseover = function slide(event) {
+        //         if (event.pageX < firstTouch) { cardContainer.style.left = `${0 - (firstTouch - event.pageX)}px`; console.log(getComputedStyle(cardContainer).left, '---', firstTouch - event.pageX); }
+        //         if (event.pageX > firstTouch) console.log('scroll right!');
+        //     };
+        //     cardContainer.onmouseup = function dismiss() {
+        //         firstTouch = NaN;
+        //     };
+        // };
 
         document.body.appendChild(form);
         document.body.appendChild(cardContainer);

@@ -17,6 +17,6 @@ Model.prototype.getData = function getData(query) {
         .then((searchList) => {
             console.log(searchList); searchList.items.forEach(item => fetch(`https://www.googleapis.com/youtube/v3/videos?key=${token}&id=${item.id.videoId}&part=snippet,statistics`)
                 .then(videoRes => videoRes.json())
-                .then(videoData => view.renderCards(videoData.items)));
+                .then((videoData) => { view.renderCards(videoData.items); this.data.cardsCount = this.data.cardsCount ? 15 : this.data.cardsCount + 15; }));
         });
 };

@@ -4,6 +4,7 @@ export default class View {
     }
 
     initialRender() {
+        /* !!! window.onresize = () => console.log(document.documentElement.clientWidth); */
         const searchInput = document.createElement('input');
         searchInput.className = 'search-input';
         searchInput.placeholder = `Enter a string to search (e.g. ${this.data.randomExample})`;
@@ -17,6 +18,7 @@ export default class View {
         let mouseIsDown = false;
         let firstTouch;
         let scrollLeft;
+        let movesIsBeen = false;
         cardContainer.onmousedown = (e) => {
             mouseIsDown = true;
             firstTouch = e.pageX - cardContainer.offsetLeft;
@@ -27,12 +29,29 @@ export default class View {
             mouseIsDown = false;
             cardContainer.classList.remove('active');
         };
-        cardContainer.onmouseup = () => {
+        cardContainer.onmouseup = (e) => {
+            /* !!! */if (movesIsBeen) {
+                if (e.pageX > firstTouch) {
+                    this.data.currentPage -= 1;
+                    this.data.currentPage = this.data.currentPage < 1 ? 1 : this.data.currentPage;
+                    cardContainer.style.scrollBehavior = 'smooth';
+                    cardContainer.scrollTo(document.documentElement.clientWidth * (this.data.currentPage - 1), 0);
+                    // console.log('back', this.data.currentPage - 1, '---', cardContainer.scrollLeft);
+                } else {
+                    cardContainer.style.scrollBehavior = 'smooth';
+                    cardContainer.scrollTo(document.documentElement.clientWidth * this.data.currentPage, 0);
+                    // console.log('forward', this.data.currentPage, '---', cardContainer.scrollLeft);
+                    this.data.currentPage += 1;
+                }
+                cardContainer.style.scrollBehavior = 'auto';
+            }
+            movesIsBeen = false;
             mouseIsDown = false;
             cardContainer.classList.remove('active');
         };
         cardContainer.onmousemove = (e) => {
             if (mouseIsDown) {
+                movesIsBeen = true;
                 e.preventDefault();
                 const x = e.pageX - cardContainer.offsetLeft;
                 const step = (x - firstTouch) * 1.5;
@@ -81,7 +100,7 @@ View.prototype.reloadCardContainer = function reloadCardContainer() {
 };
 
 View.prototype.renderCards = function renderCards(videos) {
-    console.log(videos);
+    // console.log(videos);
     videos.forEach((item) => {
         const card = document.createElement('span');
         card.className = 'card';
@@ -131,7 +150,9 @@ View.prototype.renderCards = function renderCards(videos) {
                 card.style.height = '100%';
             };
         }
-
+        // console.log((document.documentElement.clientWidth - 4 * 300) / 8);
+        card.style.margin = `0 ${(document.documentElement.clientWidth - 4 * 300) / 8}px`;
         document.querySelector('.card-container').appendChild(card);
     });
+    // [...document.querySelectorAll('.card')].forEach((item) => {item.style.margin = `0 ${(document.documentElement.clientWidth - 4 * 300) / 8}px`; });
 };

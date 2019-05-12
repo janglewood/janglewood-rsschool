@@ -8,6 +8,9 @@ export default class App {
             token: 'AIzaSyCTWC75i70moJLzyNh3tt4jzCljZcRkU8Y',
             queries: topQueries,
             randomExample: null,
+            cardsCount: null,
+            currentPage: 1,
+            pagesCount: null,
         };
     }
 

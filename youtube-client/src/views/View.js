@@ -1,3 +1,5 @@
+import Model from '../model/Model';
+
 export default class View {
     constructor(data) {
         this.data = data;
@@ -26,28 +28,23 @@ export default class View {
             cardContainer.classList.add('active');
         };
         cardContainer.onmouseleave = () => {
-            mouseIsDown = false;
             cardContainer.classList.remove('active');
+            mouseIsDown = false;
         };
         cardContainer.onmouseup = (e) => {
-            /* !!! */if (movesIsBeen) {
-                if (e.pageX > firstTouch) {
-                    this.data.currentPage -= 1;
-                    this.data.currentPage = this.data.currentPage < 1 ? 1 : this.data.currentPage;
-                    cardContainer.style.scrollBehavior = 'smooth';
-                    cardContainer.scrollTo(document.documentElement.clientWidth * (this.data.currentPage - 1), 0);
-                    // console.log('back', this.data.currentPage - 1, '---', cardContainer.scrollLeft);
-                } else {
-                    cardContainer.style.scrollBehavior = 'smooth';
-                    cardContainer.scrollTo(document.documentElement.clientWidth * this.data.currentPage, 0);
-                    // console.log('forward', this.data.currentPage, '---', cardContainer.scrollLeft);
-                    this.data.currentPage += 1;
+            if (movesIsBeen) {
+                if (e.pageX > firstTouch) { // back
+                    View.prototype.scroll(cardContainer, 'back', firstTouch, e.pageX, this.data.currentPage);
+                    console.log(this.data.currentPage);
+                } else if (e.pageX < firstTouch) { // forward
+                    View.prototype.scroll(cardContainer, 'forward', firstTouch, e.pageX, this.data.currentPage);
+                    console.log(this.data.currentPage);
                 }
                 cardContainer.style.scrollBehavior = 'auto';
             }
+            cardContainer.classList.remove('active');
             movesIsBeen = false;
             mouseIsDown = false;
-            cardContainer.classList.remove('active');
         };
         cardContainer.onmousemove = (e) => {
             if (mouseIsDown) {
@@ -85,21 +82,43 @@ View.prototype.creatingElement = function creatingElement(tagName, className, da
     this.appendChild(itemContainer || item);
     return item;
 };
-
+View.prototype.scroll = function scroll(element, direction, mouseDown, mouseUp, currentPage) {
+    const container = element;
+    let page = currentPage;
+    if (direction === 'forward') {
+        if (mouseDown - mouseUp > document.documentElement.clientWidth * 0.05) {
+            container.style.scrollBehavior = 'smooth';
+            container.scrollTo(document.documentElement.clientWidth * page, 0);
+            page += 1;
+        } else {
+            container.style.scrollBehavior = 'smooth';
+            container.scrollTo(document.documentElement.clientWidth * (page - 1), 0);
+        }
+    } else if (direction === 'back') {
+        if (mouseUp - mouseDown > document.documentElement.clientWidth * 0.05) {
+            page -= 1;
+            page = page < 1 ? 1 : page;
+            container.style.scrollBehavior = 'smooth';
+            container.scrollTo(document.documentElement.clientWidth * (page - 1), 0);
+        } else {
+            container.style.scrollBehavior = 'smooth';
+            container.scrollTo(document.documentElement.clientWidth * (page - 1), 0);
+        }
+    }
+};
+View.prototype.reloadCardContainer = function reloadCardContainer() {
+    if (document.querySelector('.card-container').innerHTML !== '') {
+        document.querySelector('.card-container').innerHTML = '';
+    }
+};
 View.prototype.getDate = function getDate(date) {
     const newDate = new Date(date);
     const day = newDate.getDate() < 10 ? `0${newDate.getDate()}` : newDate.getDate();
     const month = newDate.getMonth() + 1 < 10 ? `0${newDate.getMonth() + 1}` : newDate.getMonth() + 1;
     return `${day}.${month}.${newDate.getFullYear()}`;
 };
-
-View.prototype.reloadCardContainer = function reloadCardContainer() {
-    if (document.querySelector('.card-container').innerHTML !== '') {
-        document.querySelector('.card-container').innerHTML = '';
-    }
-};
-
 View.prototype.renderCards = function renderCards(videos) {
+    const model = new Model(this.data);
     // console.log(videos);
     videos.forEach((item) => {
         const card = document.createElement('span');
@@ -150,9 +169,7 @@ View.prototype.renderCards = function renderCards(videos) {
                 card.style.height = '100%';
             };
         }
-        // console.log((document.documentElement.clientWidth - 4 * 300) / 8);
         card.style.margin = `0 ${(document.documentElement.clientWidth - 4 * 300) / 8}px`;
         document.querySelector('.card-container').appendChild(card);
     });
-    // [...document.querySelectorAll('.card')].forEach((item) => {item.style.margin = `0 ${(document.documentElement.clientWidth - 4 * 300) / 8}px`; });
 };

@@ -1,12 +1,14 @@
-import Model from '../model/Model';
-
 export default class View {
     constructor(data) {
         this.data = data;
     }
 
     initialRender() {
-        /* !!! window.onresize = () => console.log(document.documentElement.clientWidth); */
+        window.onresize = () => {
+            this.data.clientWidth = document.documentElement.clientWidth;
+            View.prototype.getAmountCards(document.querySelector('.card'), this.data.clientWidth, this.data.cardsOnPage);
+        };
+
         const searchInput = document.createElement('input');
         searchInput.className = 'search-input';
         searchInput.placeholder = `Enter a string to search (e.g. ${this.data.randomExample})`;
@@ -32,13 +34,27 @@ export default class View {
             mouseIsDown = false;
         };
         cardContainer.onmouseup = (e) => {
+            const width = this.data.clientWidth;
             if (movesIsBeen) {
-                if (e.pageX > firstTouch) { // back
-                    View.prototype.scroll(cardContainer, 'back', firstTouch, e.pageX, this.data.currentPage);
-                    console.log(this.data.currentPage);
-                } else if (e.pageX < firstTouch) { // forward
-                    View.prototype.scroll(cardContainer, 'forward', firstTouch, e.pageX, this.data.currentPage);
-                    console.log(this.data.currentPage);
+                if (e.pageX > firstTouch) {
+                    if (e.pageX - firstTouch > width * 0.05) {
+                        this.data.currentPage -= 1;
+                        this.data.currentPage = this.data.currentPage < 1 ? 1 : this.data.currentPage;
+                        cardContainer.style.scrollBehavior = 'smooth';
+                        cardContainer.scrollTo(width * (this.data.currentPage - 1), 0);
+                    } else {
+                        cardContainer.style.scrollBehavior = 'smooth';
+                        cardContainer.scrollTo(width * (this.data.currentPage - 1), 0);
+                    }
+                } else if (e.pageX < firstTouch) {
+                    if (firstTouch - e.pageX > width * 0.05) {
+                        cardContainer.style.scrollBehavior = 'smooth';
+                        cardContainer.scrollTo(width * this.data.currentPage, 0);
+                        this.data.currentPage += 1;
+                    } else {
+                        cardContainer.style.scrollBehavior = 'smooth';
+                        cardContainer.scrollTo(width * (this.data.currentPage - 1), 0);
+                    }
                 }
                 cardContainer.style.scrollBehavior = 'auto';
             }
@@ -82,30 +98,6 @@ View.prototype.creatingElement = function creatingElement(tagName, className, da
     this.appendChild(itemContainer || item);
     return item;
 };
-View.prototype.scroll = function scroll(element, direction, mouseDown, mouseUp, currentPage) {
-    const container = element;
-    let page = currentPage;
-    if (direction === 'forward') {
-        if (mouseDown - mouseUp > document.documentElement.clientWidth * 0.05) {
-            container.style.scrollBehavior = 'smooth';
-            container.scrollTo(document.documentElement.clientWidth * page, 0);
-            page += 1;
-        } else {
-            container.style.scrollBehavior = 'smooth';
-            container.scrollTo(document.documentElement.clientWidth * (page - 1), 0);
-        }
-    } else if (direction === 'back') {
-        if (mouseUp - mouseDown > document.documentElement.clientWidth * 0.05) {
-            page -= 1;
-            page = page < 1 ? 1 : page;
-            container.style.scrollBehavior = 'smooth';
-            container.scrollTo(document.documentElement.clientWidth * (page - 1), 0);
-        } else {
-            container.style.scrollBehavior = 'smooth';
-            container.scrollTo(document.documentElement.clientWidth * (page - 1), 0);
-        }
-    }
-};
 View.prototype.reloadCardContainer = function reloadCardContainer() {
     if (document.querySelector('.card-container').innerHTML !== '') {
         document.querySelector('.card-container').innerHTML = '';
@@ -117,8 +109,20 @@ View.prototype.getDate = function getDate(date) {
     const month = newDate.getMonth() + 1 < 10 ? `0${newDate.getMonth() + 1}` : newDate.getMonth() + 1;
     return `${day}.${month}.${newDate.getFullYear()}`;
 };
+View.prototype.getAmountCards = function getAmountCards(card, clientWidth, cardsOnPage) {
+    if (clientWidth >= 1366) {
+        cardsOnPage = 4;
+    } else if (clientWidth >= 1024 && clientWidth < 1366) {
+        cardsOnPage = 3;
+    } else if (clientWidth >= 768 && clientWidth < 1024) {
+        cardsOnPage = 2;
+    } else if (clientWidth < 768) {
+        cardsOnPage = 1;
+    }
+    card.style.margin = `0 ${(clientWidth - cardsOnPage * 300) / (cardsOnPage * 2)}px`;
+
+};
 View.prototype.renderCards = function renderCards(videos) {
-    const model = new Model(this.data);
     // console.log(videos);
     videos.forEach((item) => {
         const card = document.createElement('span');
@@ -169,7 +173,7 @@ View.prototype.renderCards = function renderCards(videos) {
                 card.style.height = '100%';
             };
         }
-        card.style.margin = `0 ${(document.documentElement.clientWidth - 4 * 300) / 8}px`;
+        View.prototype.getAmountCards(card, this.data.clientWidth, this.data.cardsOnPage);
         document.querySelector('.card-container').appendChild(card);
     });
 };

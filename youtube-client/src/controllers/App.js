@@ -11,6 +11,9 @@ export default class App {
             cardsCount: null,
             currentPage: 1,
             pagesCount: null,
+            cardsOnPage: null,
+            clientWidth: document.documentElement.clientWidth,
+            pageToken: null,
         };
     }
 

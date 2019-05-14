@@ -1,12 +1,25 @@
+import Model from '../model/Model';
+
 export default class View {
     constructor(data) {
         this.data = data;
     }
 
     initialRender() {
+        const model = new Model(this.data);
         window.onresize = () => {
             this.data.clientWidth = document.documentElement.clientWidth;
-            View.prototype.getAmountCards(document.querySelector('.card'), this.data.clientWidth, this.data.cardsOnPage);
+            if (this.data.clientWidth >= 1366) {
+                this.data.cardsOnPage = 4;
+            } else if (this.data.clientWidth >= 1024 && this.data.clientWidth < 1366) {
+                this.data.cardsOnPage = 3;
+            } else if (this.data.clientWidth >= 768 && this.data.clientWidth < 1024) {
+                this.data.cardsOnPage = 2;
+            } else if (this.data.clientWidth < 768) {
+                this.data.cardsOnPage = 1;
+            }
+            [...document.querySelectorAll('.card')].forEach((card) => { card.style.margin = `0 ${(this.data.clientWidth - this.data.cardsOnPage * 300) / (this.data.cardsOnPage * 2)}px`; });
+            console.log(this.data.currentPage);
         };
 
         const searchInput = document.createElement('input');
@@ -36,23 +49,25 @@ export default class View {
         cardContainer.onmouseup = (e) => {
             const width = this.data.clientWidth;
             if (movesIsBeen) {
-                if (e.pageX > firstTouch) {
+                cardContainer.style.scrollBehavior = 'smooth';
+                if (e.pageX > firstTouch) { // back
                     if (e.pageX - firstTouch > width * 0.05) {
                         this.data.currentPage -= 1;
                         this.data.currentPage = this.data.currentPage < 1 ? 1 : this.data.currentPage;
-                        cardContainer.style.scrollBehavior = 'smooth';
+                        console.log(this.data.currentPage);
                         cardContainer.scrollTo(width * (this.data.currentPage - 1), 0);
                     } else {
-                        cardContainer.style.scrollBehavior = 'smooth';
                         cardContainer.scrollTo(width * (this.data.currentPage - 1), 0);
                     }
-                } else if (e.pageX < firstTouch) {
+                } else if (e.pageX < firstTouch) { // forward
                     if (firstTouch - e.pageX > width * 0.05) {
-                        cardContainer.style.scrollBehavior = 'smooth';
                         cardContainer.scrollTo(width * this.data.currentPage, 0);
                         this.data.currentPage += 1;
+                        console.log(this.data.currentPage);
+                        if (this.data.currentPage === Math.floor(this.data.cardsCount / this.data.cardsOnPage)) {
+                            model.getData(document.querySelector('.search-input').value, this.data.pageToken);
+                        }
                     } else {
-                        cardContainer.style.scrollBehavior = 'smooth';
                         cardContainer.scrollTo(width * (this.data.currentPage - 1), 0);
                     }
                 }
@@ -109,19 +124,6 @@ View.prototype.getDate = function getDate(date) {
     const month = newDate.getMonth() + 1 < 10 ? `0${newDate.getMonth() + 1}` : newDate.getMonth() + 1;
     return `${day}.${month}.${newDate.getFullYear()}`;
 };
-View.prototype.getAmountCards = function getAmountCards(card, clientWidth, cardsOnPage) {
-    if (clientWidth >= 1366) {
-        cardsOnPage = 4;
-    } else if (clientWidth >= 1024 && clientWidth < 1366) {
-        cardsOnPage = 3;
-    } else if (clientWidth >= 768 && clientWidth < 1024) {
-        cardsOnPage = 2;
-    } else if (clientWidth < 768) {
-        cardsOnPage = 1;
-    }
-    card.style.margin = `0 ${(clientWidth - cardsOnPage * 300) / (cardsOnPage * 2)}px`;
-
-};
 View.prototype.renderCards = function renderCards(videos) {
     // console.log(videos);
     videos.forEach((item) => {
@@ -173,7 +175,16 @@ View.prototype.renderCards = function renderCards(videos) {
                 card.style.height = '100%';
             };
         }
-        View.prototype.getAmountCards(card, this.data.clientWidth, this.data.cardsOnPage);
+        if (this.data.clientWidth >= 1366) {
+            this.data.cardsOnPage = 4;
+        } else if (this.data.clientWidth >= 1024 && this.data.clientWidth < 1366) {
+            this.data.cardsOnPage = 3;
+        } else if (this.data.clientWidth >= 768 && this.data.clientWidth < 1024) {
+            this.data.cardsOnPage = 2;
+        } else if (this.data.clientWidth < 768) {
+            this.data.cardsOnPage = 1;
+        }
+        card.style.margin = `0 ${(this.data.clientWidth - this.data.cardsOnPage * 300) / (this.data.cardsOnPage * 2)}px`;
         document.querySelector('.card-container').appendChild(card);
     });
 };

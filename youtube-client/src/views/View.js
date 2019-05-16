@@ -1,5 +1,9 @@
 import Model from '../model/Model';
 
+import {
+    timeout, mouseDown, mouseLeave, mouseUp, mouseMove,
+} from './scroll';
+
 export default class View {
     constructor(data) {
         this.data = data;
@@ -7,20 +11,13 @@ export default class View {
 
     initialRender() {
         const model = new Model(this.data);
-        window.onresize = () => {
-            this.data.clientWidth = document.documentElement.clientWidth;
-            if (this.data.clientWidth >= 1366) {
-                this.data.cardsOnPage = 4;
-            } else if (this.data.clientWidth >= 1024 && this.data.clientWidth < 1366) {
-                this.data.cardsOnPage = 3;
-            } else if (this.data.clientWidth >= 768 && this.data.clientWidth < 1024) {
-                this.data.cardsOnPage = 2;
-            } else if (this.data.clientWidth < 768) {
-                this.data.cardsOnPage = 1;
-            }
-            [...document.querySelectorAll('.card')].forEach((card) => { card.style.margin = `0 ${(this.data.clientWidth - this.data.cardsOnPage * 300) / (this.data.cardsOnPage * 2)}px`; });
-            console.log(this.data.currentPage);
-        };
+        let timeOut;
+
+        window.addEventListener('resize', () => {
+            const x = timeout.bind(this, this.data);
+            window.clearTimeout(timeOut);
+            timeOut = window.setTimeout(x, 100);
+        });
 
         const searchInput = document.createElement('input');
         searchInput.className = 'search-input';
@@ -32,72 +29,27 @@ export default class View {
         const cardContainer = document.createElement('div');
         cardContainer.className = 'card-container';
 
-        let mouseIsDown = false;
-        let firstTouch;
-        let scrollLeft;
-        let movesIsBeen = false;
-        cardContainer.onmousedown = (e) => {
-            mouseIsDown = true;
-            firstTouch = e.pageX - cardContainer.offsetLeft;
-            scrollLeft = cardContainer.scrollLeft;
-            cardContainer.classList.add('active');
-        };
-        cardContainer.onmouseleave = () => {
-            cardContainer.classList.remove('active');
-            mouseIsDown = false;
-        };
-        cardContainer.onmouseup = (e) => {
-            const width = this.data.clientWidth;
-            if (movesIsBeen) {
-                cardContainer.style.scrollBehavior = 'smooth';
-                if (e.pageX > firstTouch) { // back
-                    if (e.pageX - firstTouch > width * 0.05) {
-                        this.data.currentPage -= 1;
-                        this.data.currentPage = this.data.currentPage < 1 ? 1 : this.data.currentPage;
-                        console.log(this.data.currentPage);
-                        cardContainer.scrollTo(width * (this.data.currentPage - 1), 0);
-                    } else {
-                        cardContainer.scrollTo(width * (this.data.currentPage - 1), 0);
-                    }
-                } else if (e.pageX < firstTouch) { // forward
-                    if (firstTouch - e.pageX > width * 0.05) {
-                        cardContainer.scrollTo(width * this.data.currentPage, 0);
-                        this.data.currentPage += 1;
-                        console.log(this.data.currentPage);
-                        if (this.data.currentPage === Math.floor(this.data.cardsCount / this.data.cardsOnPage)) {
-                            model.getData(document.querySelector('.search-input').value, this.data.pageToken);
-                        }
-                    } else {
-                        cardContainer.scrollTo(width * (this.data.currentPage - 1), 0);
-                    }
-                }
-                cardContainer.style.scrollBehavior = 'auto';
-            }
-            cardContainer.classList.remove('active');
-            movesIsBeen = false;
-            mouseIsDown = false;
-        };
-        cardContainer.onmousemove = (e) => {
-            if (mouseIsDown) {
-                movesIsBeen = true;
-                e.preventDefault();
-                const x = e.pageX - cardContainer.offsetLeft;
-                const step = (x - firstTouch) * 1.5;
-                cardContainer.scrollLeft = scrollLeft - step;
-            }
-        };
+        cardContainer.addEventListener('mousedown', e => mouseDown(e, cardContainer));
+        cardContainer.addEventListener('mouseleave', () => mouseLeave(cardContainer));
+        cardContainer.addEventListener('mouseup', e => mouseUp(e, cardContainer, this.data, model));
+        cardContainer.addEventListener('mousemove', e => mouseMove(e, cardContainer));
+
+        cardContainer.addEventListener('touchstart', e => mouseDown(e, cardContainer));
+        cardContainer.addEventListener('touchcancel', () => mouseLeave(cardContainer));
+        cardContainer.addEventListener('touchend', e => mouseUp(e, cardContainer, this.data, model));
+        cardContainer.addEventListener('touchmove', e => mouseMove(e, cardContainer));
 
         document.body.appendChild(form);
         document.body.appendChild(cardContainer);
     }
 }
 
-View.prototype.creatingElement = function creatingElement(tagName, className, data, icon) {
+View.prototype.createElement = function createElement(tagName, className, data, icon) {
     const item = document.createElement(tagName);
     let itemContainer = null;
     item.className = className || null;
     if (className !== 'image') {
-        item.innerText = data || null; // add feature for hide large text
+        item.innerText = data || null;
     } else {
         item.src = data;
     }
@@ -143,37 +95,32 @@ View.prototype.renderCards = function renderCards(videos) {
             dislikeCount,
         } = item.statistics;
 
-        const tip = document.createElement('span');
-        tip.className = 'tip';
-        tip.innerText = '[...]';
-        const titleElement = View.prototype.creatingElement.call(card, 'a', 'title', title);
+        // const expand = document.createElement('span');
+        // expand.className = 'tip';
+        // expand.innerText = '[...]';
+        const titleElement = View.prototype.createElement.call(card, 'a', 'title', title);
         if (title.length > 22) {
-            titleElement.innerText = titleElement.innerText.slice(0, 30);
-            titleElement.appendChild(tip);
-            tip.onclick = (e) => {
-                e.preventDefault();
-                titleElement.innerText = title;
-            };
+            titleElement.innerText = `${titleElement.innerText.slice(0, 22)}...`;
         }
         titleElement.href = `https://www.youtube.com/watch?v=${item.id}`;
         titleElement.target = '_blank';
-        View.prototype.creatingElement.call(card, 'img', 'image', thumbnails.medium.url);
-        View.prototype.creatingElement.call(card, 'span', 'channelTitle', channelTitle, '<i class="fab fa-youtube"></i>');
-        View.prototype.creatingElement.call(card, 'span', 'channelTitle', View.prototype.getDate(publishedAt), '<i class="far fa-calendar-alt"></i>');
-        View.prototype.creatingElement.call(card, 'span', 'view-count', viewCount, '<i class="fas fa-eye"></i>');
-        View.prototype.creatingElement.call(card, 'span', 'like-count', likeCount, '<i class="fas fa-thumbs-up"></i>');
-        View.prototype.creatingElement.call(card, 'span', 'dislike-count', dislikeCount, '<i class="fas fa-thumbs-down"></i>');
-        const descriptionElement = View.prototype.creatingElement.call(card, 'span', 'description', description);
-        if (description.length > 65) {
-            const tipClone = tip.cloneNode(true);
-            descriptionElement.innerText = descriptionElement.innerText.slice(0, 65);
-            descriptionElement.appendChild(tipClone);
-            tipClone.onclick = (e) => {
-                e.preventDefault();
-                document.body.style.height = '100%';
-                descriptionElement.innerText = description;
-                card.style.height = '100%';
-            };
+        View.prototype.createElement.call(card, 'img', 'image', thumbnails.medium.url);
+        View.prototype.createElement.call(card, 'span', 'channelTitle', channelTitle, '<i class="fab fa-youtube"></i>');
+        View.prototype.createElement.call(card, 'span', 'channelTitle', View.prototype.getDate(publishedAt), '<i class="far fa-calendar-alt"></i>');
+        View.prototype.createElement.call(card, 'span', 'view-count', viewCount, '<i class="fas fa-eye"></i>');
+        View.prototype.createElement.call(card, 'span', 'like-count', likeCount, '<i class="fas fa-thumbs-up"></i>');
+        View.prototype.createElement.call(card, 'span', 'dislike-count', dislikeCount, '<i class="fas fa-thumbs-down"></i>');
+        const descriptionElement = View.prototype.createElement.call(card, 'span', 'description', description);
+        if (description.length > 150) {
+            // const expandClone = expand.cloneNode(true);
+            descriptionElement.innerText = `${descriptionElement.innerText.slice(0, 150)}...`;
+            // descriptionElement.appendChild(expandClone);
+            // expandClone.onclick = (e) => {
+            //     e.preventDefault();
+            //     document.body.style.height = '100%';
+            //     descriptionElement.innerText = description;
+            //     card.style.height = '100%';
+            // };
         }
         if (this.data.clientWidth >= 1366) {
             this.data.cardsOnPage = 4;
@@ -187,4 +134,22 @@ View.prototype.renderCards = function renderCards(videos) {
         card.style.margin = `0 ${(this.data.clientWidth - this.data.cardsOnPage * 300) / (this.data.cardsOnPage * 2)}px`;
         document.querySelector('.card-container').appendChild(card);
     });
+};
+View.prototype.renderThumbnails = function renderThumbnails() {
+    function createThumbs (tag, className) {
+        const item = document.createElement(tag);
+        item.className = className;
+        return item;
+    }
+    const thumbsContainer = createThumbs('div', 'thumbs-container');
+
+    const firstThumb = createThumbs('span', 'thumbs');
+    const secondThumb = createThumbs('span', 'thumbs');
+    const thirdThumb = createThumbs('span', 'thumbs');
+
+    document.querySelector('.thumbs-container').appendChild(firstThumb);
+    document.querySelector('.thumbs-container').appendChild(firstThumb);
+    document.querySelector('.thumbs-container').appendChild(firstThumb);
+
+    document.querySelector('.thum-container').appendChild(card);
 };

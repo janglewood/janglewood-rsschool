@@ -2,7 +2,23 @@ let mouseIsDown = false;
 let firstTouch;
 let scrollLeft;
 let movesIsBeen = false;
+export function scrollByClick(dir, data, model) {
+    document.querySelector('.card-container').style.scrollBehavior = 'smooth';
 
+    if (dir === 'back') {
+        data.currentPage -= 1;
+        data.currentPage = data.currentPage < 1 ? 1 : data.currentPage;
+        document.querySelector('.card-container').scrollTo(data.clientWidth * (data.currentPage - 1), 0);
+        document.querySelector('.center').innerText = data.currentPage;
+    } else if (dir === 'forward') {
+        document.querySelector('.card-container').scrollTo(data.clientWidth * data.currentPage, 0);
+        data.currentPage += 1;
+        if (data.currentPage === Math.floor(data.cardsCount / data.cardsOnPage)) {
+            model.getData(document.querySelector('.search-input').value, data.pageToken);
+        }
+        document.querySelector('.center').innerText = data.currentPage;
+    }
+}
 export function timeout(data) {
     const amountsOfVisibleCards = data.currentPage * data.cardsOnPage;
     const cardToShow = amountsOfVisibleCards - data.cardsOnPage + 1;

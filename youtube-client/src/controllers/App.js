@@ -27,5 +27,6 @@ export default class App {
             view.reloadCardContainer();
             model.getData(document.querySelector('.search-input').value);
         };
+        view.renderThumbnails();
     }
 }

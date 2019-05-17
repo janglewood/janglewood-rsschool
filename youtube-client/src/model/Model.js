@@ -24,5 +24,6 @@ Model.prototype.getData = function getData(query, nextPageToken) {
                     view.renderCards(videoData.items);
                     this.data.cardsCount = document.querySelectorAll('.card').length;
                 }));
+            document.querySelector('.thumbs-container').style.display = 'flex';
         });
 };

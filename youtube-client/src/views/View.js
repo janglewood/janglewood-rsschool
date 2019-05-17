@@ -1,7 +1,7 @@
 import Model from '../model/Model';
 
 import {
-    timeout, mouseDown, mouseLeave, mouseUp, mouseMove,
+    timeout, mouseDown, mouseLeave, mouseUp, mouseMove, scrollByClick,
 } from './scroll';
 
 export default class View {
@@ -136,20 +136,43 @@ View.prototype.renderCards = function renderCards(videos) {
     });
 };
 View.prototype.renderThumbnails = function renderThumbnails() {
-    function createThumbs (tag, className) {
+    const model = new Model(this.data);
+    function createThumbs(tag, className, innerHTML) {
         const item = document.createElement(tag);
-        item.className = className;
+        className.forEach(name => item.classList.add(name));
+        if (tag === 'button') {
+            item.onmouseover = () => item.classList.add('hov');
+            item.onmouseleave = () => item.classList.remove('hov');
+        }
+        item.innerHTML = innerHTML || '';
         return item;
     }
-    const thumbsContainer = createThumbs('div', 'thumbs-container');
+    const thumbsContainer = createThumbs('div', ['thumbs-container']);
 
-    const firstThumb = createThumbs('span', 'thumbs');
-    const secondThumb = createThumbs('span', 'thumbs');
-    const thirdThumb = createThumbs('span', 'thumbs');
+    const firstThumb = createThumbs('button', ['thumbs', 'left'], '<i class="fas fa-chevron-left"></i>');
+    const secondThumb = createThumbs('span', ['thumbs', 'center'], this.data.currentPage);
+    const thirdThumb = createThumbs('button', ['thumbs', 'right'], '<i class="fas fa-chevron-right"></i>');
 
-    document.querySelector('.thumbs-container').appendChild(firstThumb);
-    document.querySelector('.thumbs-container').appendChild(firstThumb);
-    document.querySelector('.thumbs-container').appendChild(firstThumb);
+    firstThumb.onclick = scrollByClick.bind(this, 'back', this.data, model);
+    firstThumb.onmouseover = (e) => {
+        // const elem = document.createElement('span');
+        // elem.innerText = this.data.currentPage - 1;
+        // firstThumb.classList.add('hov');
+        // e.target.querySelector('i').style.display = 'none';
+        // e.target.appendChild(elem);
+        showTip();
+    };
+    firstThumb.onmouseout = (e) => {
+        // firstThumb.classList.remove('hov');
+        // e.target.querySelector('span').remove();
+        // e.target.querySelector('i').style.display = 'flex';
+        tip.style.display = 'none';
+    };
+    thirdThumb.onclick = scrollByClick.bind(this, 'forward', this.data, model);
 
-    document.querySelector('.thum-container').appendChild(card);
+    thumbsContainer.appendChild(firstThumb);
+    thumbsContainer.appendChild(secondThumb);
+    thumbsContainer.appendChild(thirdThumb);
+
+    document.body.appendChild(thumbsContainer);
 };

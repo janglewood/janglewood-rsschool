@@ -10,7 +10,6 @@ export default class App {
             randomExample: null,
             cardsCount: null,
             currentPage: 1,
-            pagesCount: null,
             cardsOnPage: null,
             clientWidth: document.documentElement.clientWidth,
             pageToken: null,

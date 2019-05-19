@@ -1,8 +1,16 @@
 import Model from '../model/Model';
 
 import {
-    timeout, mouseDown, mouseLeave, mouseUp, mouseMove, scrollByClick,
-} from './scroll';
+    timeout,
+    mouseDown,
+    mouseLeave,
+    mouseUp,
+    mouseMove,
+    scrollByClick,
+    showTip,
+    deleteTip,
+    removeSpinner,
+} from '../functions';
 
 export default class View {
     constructor(data) {
@@ -65,19 +73,23 @@ View.prototype.createElement = function createElement(tagName, className, data, 
     this.appendChild(itemContainer || item);
     return item;
 };
+
 View.prototype.reloadCardContainer = function reloadCardContainer() {
     if (document.querySelector('.card-container').innerHTML !== '') {
         document.querySelector('.card-container').innerHTML = '';
+        document.querySelector('.thumbs-container').style.display = 'none';
     }
 };
-View.prototype.getDate = function getDate(date) {
+
+View.prototype.formatDate = function formatDate(date) {
+    console.log(date);
     const newDate = new Date(date);
     const day = newDate.getDate() < 10 ? `0${newDate.getDate()}` : newDate.getDate();
     const month = newDate.getMonth() + 1 < 10 ? `0${newDate.getMonth() + 1}` : newDate.getMonth() + 1;
     return `${day}.${month}.${newDate.getFullYear()}`;
 };
+
 View.prototype.renderCards = function renderCards(videos) {
-    // console.log(videos);
     videos.forEach((item) => {
         const card = document.createElement('span');
         card.className = 'card';
@@ -95,9 +107,6 @@ View.prototype.renderCards = function renderCards(videos) {
             dislikeCount,
         } = item.statistics;
 
-        // const expand = document.createElement('span');
-        // expand.className = 'tip';
-        // expand.innerText = '[...]';
         const titleElement = View.prototype.createElement.call(card, 'a', 'title', title);
         if (title.length > 22) {
             titleElement.innerText = `${titleElement.innerText.slice(0, 22)}...`;
@@ -106,21 +115,13 @@ View.prototype.renderCards = function renderCards(videos) {
         titleElement.target = '_blank';
         View.prototype.createElement.call(card, 'img', 'image', thumbnails.medium.url);
         View.prototype.createElement.call(card, 'span', 'channelTitle', channelTitle, '<i class="fab fa-youtube"></i>');
-        View.prototype.createElement.call(card, 'span', 'channelTitle', View.prototype.getDate(publishedAt), '<i class="far fa-calendar-alt"></i>');
+        View.prototype.createElement.call(card, 'span', 'channelTitle', View.prototype.formatDate(publishedAt), '<i class="far fa-calendar-alt"></i>');
         View.prototype.createElement.call(card, 'span', 'view-count', viewCount, '<i class="fas fa-eye"></i>');
         View.prototype.createElement.call(card, 'span', 'like-count', likeCount, '<i class="fas fa-thumbs-up"></i>');
         View.prototype.createElement.call(card, 'span', 'dislike-count', dislikeCount, '<i class="fas fa-thumbs-down"></i>');
         const descriptionElement = View.prototype.createElement.call(card, 'span', 'description', description);
         if (description.length > 150) {
-            // const expandClone = expand.cloneNode(true);
             descriptionElement.innerText = `${descriptionElement.innerText.slice(0, 150)}...`;
-            // descriptionElement.appendChild(expandClone);
-            // expandClone.onclick = (e) => {
-            //     e.preventDefault();
-            //     document.body.style.height = '100%';
-            //     descriptionElement.innerText = description;
-            //     card.style.height = '100%';
-            // };
         }
         if (this.data.clientWidth >= 1366) {
             this.data.cardsOnPage = 4;
@@ -134,16 +135,14 @@ View.prototype.renderCards = function renderCards(videos) {
         card.style.margin = `0 ${(this.data.clientWidth - this.data.cardsOnPage * 300) / (this.data.cardsOnPage * 2)}px`;
         document.querySelector('.card-container').appendChild(card);
     });
+    removeSpinner();
 };
+
 View.prototype.renderThumbnails = function renderThumbnails() {
     const model = new Model(this.data);
     function createThumbs(tag, className, innerHTML) {
         const item = document.createElement(tag);
         className.forEach(name => item.classList.add(name));
-        if (tag === 'button') {
-            item.onmouseover = () => item.classList.add('hov');
-            item.onmouseleave = () => item.classList.remove('hov');
-        }
         item.innerHTML = innerHTML || '';
         return item;
     }
@@ -154,21 +153,12 @@ View.prototype.renderThumbnails = function renderThumbnails() {
     const thirdThumb = createThumbs('button', ['thumbs', 'right'], '<i class="fas fa-chevron-right"></i>');
 
     firstThumb.onclick = scrollByClick.bind(this, 'back', this.data, model);
-    firstThumb.onmouseover = (e) => {
-        // const elem = document.createElement('span');
-        // elem.innerText = this.data.currentPage - 1;
-        // firstThumb.classList.add('hov');
-        // e.target.querySelector('i').style.display = 'none';
-        // e.target.appendChild(elem);
-        showTip();
-    };
-    firstThumb.onmouseout = (e) => {
-        // firstThumb.classList.remove('hov');
-        // e.target.querySelector('span').remove();
-        // e.target.querySelector('i').style.display = 'flex';
-        tip.style.display = 'none';
-    };
+    firstThumb.onmouseover = () => showTip(this.data, 'back');
+    firstThumb.onmouseleave = () => deleteTip('back');
+
     thirdThumb.onclick = scrollByClick.bind(this, 'forward', this.data, model);
+    thirdThumb.onmouseover = () => showTip(this.data, 'forward');
+    thirdThumb.onmouseleave = () => deleteTip('forward');
 
     thumbsContainer.appendChild(firstThumb);
     thumbsContainer.appendChild(secondThumb);

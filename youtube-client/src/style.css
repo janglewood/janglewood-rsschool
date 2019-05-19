@@ -16,7 +16,7 @@ body {
     align-items: center;
     width: 100%;
     height: 100%;
-    background-color: #cdcdcd;
+    background-color: #dcdcdc;
     font-family: Rubik;
 }
 form {
@@ -24,6 +24,7 @@ form {
     justify-content: center;
     align-items: center;
     width: 100%;
+    margin: 1% auto;
 }
 a {
     text-decoration: none;
@@ -33,7 +34,7 @@ a {
 .search-input {
     width: 50%;
     height: 45px;
-    border-radius: 30px;
+    border-radius: 15px;
     border: 2px solid #85858a;
     outline: none;
     padding: 0 10px;
@@ -44,7 +45,7 @@ a {
     flex-direction: row;
     overflow: hidden;
     width: 100%;
-    height: 65%;
+    min-height: 530px;
     transition: all 0.2s;
 }
 .card {
@@ -55,7 +56,7 @@ a {
     min-width: 300px;
     height: 500px;
     background-color: #ffffff;
-    border-radius: 15px;
+    border-radius: 10px;
     overflow: hidden;
     text-align: center;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
@@ -91,11 +92,13 @@ a {
     flex-direction: row;
     justify-content: space-around;
     width: 20%;
-    /* height: 100px; */
-    /* margin-bottom: 300px; */
+    min-width: 200px;
     font-size: 25px;
 }
 .thumbs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 40px;
     height: 40px;
     transition: background 0.8s;
@@ -103,20 +106,42 @@ a {
     border: none;
     outline: none;
     border-radius: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
-.right.hov,
-.left.hov {
-    background: #a3a3a3 radial-gradient(circle, transparent 1%, #a3a3a3 1%) center/15000%;
+.right:hover,
+.left:hover {
+    background: #c2c2c2 radial-gradient(circle, transparent 1%, #c2c2c2 1%) center/15000%;
 }
 .right:active,
 .left:active {
-    background-color: #cdcdcd;
+    background-color: #e9e9e9;
     background-size: 100%;
     transition: background 0s;
 }
 .center {
     font-size: 40px;
 }
+.spinner {
+    position: absolute;
+    font-size: 100px;
+    align-self: center;
+    justify-self: center;
+    animation: fi 1s infinite linear;
+}
+.error {
+    display: flex;
+    flex-wrap: wrap;
+    align-self: center;
+    justify-self: center;
+    text-align: center;
+    color: #d32e2e;
+    font-size: 30px;
+    margin: 0 auto;
+}
+@keyframes fi {
+    0% {
+      color: #c2c2c2;
+      }
+    100% {
+      color: #d32e2e;
+      }
+  }

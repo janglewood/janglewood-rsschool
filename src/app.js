@@ -6,8 +6,8 @@ class App {
   constructor() {
     this.state = {
       mainScreen: true,
-      userFileName: 'New sprite'
-    }
+      userFileName: 'New sprite',
+    };
   }
 
   start() {
@@ -21,3 +21,7 @@ class App {
 
 const app = new App();
 app.start();
+
+document.querySelectorAll('.action-container>.button')[0].onclick = (e) => {
+    console.log(e);
+}

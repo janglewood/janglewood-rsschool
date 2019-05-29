@@ -5,7 +5,7 @@ export default class Preview {
     this.data = data;
   }
 
-  createContainer(parent) {
+  static createContainer(parent) {
     const container = document.createElement('span');
     container.className = 'container';
 
@@ -40,7 +40,7 @@ export default class Preview {
     const main = document.createElement('main');
     main.className = 'preview';
 
-    this.createContainer(main);
+    Preview.createContainer(main);
     pageWrapper.appendChild(main);
   }
 }

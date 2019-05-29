@@ -23,3 +23,19 @@ body {
     width: 100%;
     height: 100%;
 }
+.button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+    padding: 0 10px;
+    background-color: #fabd4cee;
+    font-size: 16px;
+    color: #000000;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+.button:hover {
+    background-color: #ffedccde;
+}

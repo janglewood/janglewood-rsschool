@@ -1,8 +1,23 @@
 import Header from './components/Header/header';
+import Preview from './screens/Preview/preview';
+import './style.css';
 
-function start() {
-    const header = new Header();
+class App {
+  constructor() {
+    this.state = {
+      mainScreen: true,
+      userFileName: 'New sprite'
+    }
+  }
+
+  start() {
+    const header = new Header(this.state);
+    const preview = new Preview(this.state);
+
     header.initialRender();
+    preview.render();
+  }
 }
 
-start();
+const app = new App();
+app.start();

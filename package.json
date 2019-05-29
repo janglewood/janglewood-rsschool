@@ -23,7 +23,6 @@
     "for-in": "^1.0.2",
     "fragment-cache": "^0.2.1",
     "fs.realpath": "^1.0.0",
-    "fsevents": "^1.2.9",
     "get-value": "^2.0.6",
     "glob-parent": "^3.1.0",
     "graceful-fs": "^4.1.15",
@@ -98,6 +97,7 @@
   "devDependencies": {
     "eslint": "^5.16.0",
     "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.17.3",
     "html-webpack-plugin": "^3.2.0",
     "webpack": "^4.32.2",
     "webpack-cli": "^3.3.2",

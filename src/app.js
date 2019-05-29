@@ -1,8 +1,8 @@
+import Header from './components/Header/header';
 
-console.log('Hello, guest!');
-document.getElementsByTagName('body')[0].style.backgroundColor = 'pink';
-
-function x() {
-    document.getElementsByTagName('body')[0].style.backgroundColor = 'yellow';
+function start() {
+    const header = new Header();
+    header.initialRender();
 }
-setTimeout(x, 2000);
+
+start();

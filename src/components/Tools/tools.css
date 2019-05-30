@@ -56,3 +56,14 @@
     background-color: #ffffff;
     display: block;
 }
+.tools-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 90%;
+}
+.pen {
+    color: white;
+    fill: white;
+    background-image: url('../../assets/icons/pen.svg');
+}

@@ -8,6 +8,7 @@ class App {
     this.state = {
       mainScreenIsActive: true,
       userFileName: 'Type file name here',
+      penSize: 1,
     };
   }
 

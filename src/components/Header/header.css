@@ -9,3 +9,12 @@ header {
     color: #ffffff;
     background-color: #242323e8;
 }
+header>input {
+    padding: 5px 10px;
+    width: 35%;
+    height: 50%;
+    background-color: inherit;
+    color: inherit;
+    border: none;
+    outline: none;
+}

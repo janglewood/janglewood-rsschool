@@ -11,10 +11,11 @@ export default class Preview {
 
     const actionContainer = document.createElement('span');
     actionContainer.className = 'action-container';
-    actionContainer.innerHTML = `<span>Create pixel sprites and save them on you desktop with <b>Piskel clone</b>.</span>`;
+    actionContainer.innerHTML = '<span>Create pixel sprites and save them on you computer with <b>Piskel clone</b>.</span>';
 
     const createSpriteBtn = document.createElement('span');
-    createSpriteBtn.className = 'button';
+    createSpriteBtn.classList.add('button', 'create-sprite');
+
     createSpriteBtn.innerText = 'Create sprite';
 
     const faqBtn = document.createElement('span');

@@ -5,6 +5,20 @@ export default class Header {
   constructor(data) {
     this.data = data;
   }
+
+  addFileNameInput() {
+    const header = document.querySelector('header');
+    const headerBtn = document.querySelector('header>.button');
+
+    const input = document.createElement('input');
+    input.classname = 'file-name';
+    input.type = 'text';
+    input.placeholder = this.data.userFileName;
+
+    input.oninput = () => { this.data.userFileName = input.value; };
+
+    header.insertBefore(input, headerBtn);
+  }
 }
 
 Header.prototype.initialRender = () => {
@@ -14,14 +28,8 @@ Header.prototype.initialRender = () => {
   header.innerHTML = 'Piskel clone';
 
   const createBtn = document.createElement('span');
-  createBtn.className = 'button';
+  createBtn.classList.add('button', 'create-sprite');
   createBtn.innerText = 'Create new sprite';
-  createBtn.id = 'iii';
-
-  // const input = document.createElement('input');
-  // input.type = 'text';
-  // input.placeholder = this.data.userFileName;
-  // input.oninput = () => { this.data.userFileName = input.value; console.log(input.value); };
 
   header.appendChild(createBtn);
   pageWrapper.appendChild(header);

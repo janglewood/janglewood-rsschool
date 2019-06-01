@@ -1,5 +1,6 @@
 import Tools from '../../components/Tools/tools';
 import Frame from '../../components/Frame/frame';
+import DrawField from '../../components/DrawField/drawField';
 import './editor.css';
 
 export default class Editor {
@@ -11,6 +12,7 @@ export default class Editor {
     this.data.mainScreenIsActive = false;
     const tools = new Tools(this.data);
     const frame = new Frame(this.data);
+    const drawField = new DrawField(this.data);
 
     document.getElementsByClassName('preview')[0].remove();
 
@@ -20,5 +22,6 @@ export default class Editor {
 
     tools.render();
     frame.render();
+    drawField.render();
   }
 }

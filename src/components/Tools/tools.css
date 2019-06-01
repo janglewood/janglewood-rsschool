@@ -62,8 +62,3 @@
     flex-wrap: wrap;
     width: 90%;
 }
-.pen {
-    color: white;
-    fill: white;
-    background-image: url('../../assets/icons/pen.svg');
-}

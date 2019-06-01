@@ -1,5 +1,5 @@
 import './tools.css';
-import { penc } from '../../assets/icons/pen.svg';
+import Pen from './Pen/pen';
 
 export default class Tools {
   constructor(data) {
@@ -34,19 +34,12 @@ export default class Tools {
   }
 
   createToolsContainer() {
+    const pen = new Pen(this.data);
+
     const toolsContainer = document.createElement('span');
     toolsContainer.className = 'tools-container';
 
     document.getElementsByClassName('left-sidebar')[0].appendChild(toolsContainer);
-    this.createPen();
-  }
-
-  createPen() {
-    const container = document.getElementsByClassName('tools-container')[0];
-    const pen = document.createElement('span');
-    pen.className = 'pen';
-    pen.style.innerHTML = pen;
-    pen.style.backgroundImage = 'url("../../assets/icons/pen.svg")'
-    container.appendChild(pen);
+    pen.createPen();
   }
 }

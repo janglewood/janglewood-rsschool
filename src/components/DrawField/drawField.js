@@ -14,39 +14,39 @@ export default class DrawField {
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
 
-    canvas.setAttribute('width', '490');
-    canvas.setAttribute('height', '220');
+    canvas.setAttribute('width', '330');
+    canvas.setAttribute('height', '330');
     canvas.setAttribute('id', 'canvas');
 
     canvasContainer.appendChild(canvas);
     container.appendChild(canvasContainer);
 
-    const clickX = [];
-    const clickY = [];
-    const clickDrag = [];
-    const clickSize = [];
+    this.data.clickX = [];
+    this.data.clickY = [];
+    this.data.clickDrag = [];
+    this.data.clickSize = [];
 
     function addClick(x, y, dragging, data) {
-      clickX.push(x);
-      clickY.push(y);
-      clickDrag.push(dragging);
-      clickSize.push(data.penSize);
+      data.clickX.push(x);
+      data.clickY.push(y);
+      data.clickDrag.push(dragging);
+      data.clickSize.push(data.penSize);
     }
 
-    function redraw() {
+    function redraw(data) {
       context.strokeStyle = '000000';
       context.lineJoin = 'round';
-      
-      for (let i = 0; i < clickX.length; i++) {
+
+      for (let i = 0; i < data.clickX.length; i++) {
         context.beginPath();
-        if (clickDrag[i] && i) {
-          context.moveTo(clickX[i - 1], clickY[i - 1]);
+        if (data.clickDrag[i] && i) {
+          context.moveTo(data.clickX[i - 1], data.clickY[i - 1]);
         } else {
-          context.moveTo(clickX[i] - 1, clickY[i]);
+          context.moveTo(data.clickX[i] - 1, data.clickY[i]);
         }
-        context.lineTo(clickX[i], clickY[i]);
+        context.lineTo(data.clickX[i], data.clickY[i]);
         context.closePath();
-        context.lineWidth = clickSize[i];
+        context.lineWidth = data.clickSize[i];
         context.stroke();
       }
     }
@@ -61,25 +61,25 @@ export default class DrawField {
 
       if (this.data.isPaint) {
         addClick(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop, false, this.data);
-        redraw();
+        redraw(this.data);
       }
     };
 
     canvas.onmousemove = (e) => {
       if (this.data.isPaint) {
         addClick(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop, true, this.data);
-        redraw();
+        redraw(this.data);
       }
     };
 
     canvas.onmouseup = () => {
       this.data.isPaint = false;
-      // refresh image of current frame
+      document.getElementsByClassName('frame')[this.data.framesAmount - 1].getContext('2d').drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 300, 150);
     };
 
     canvas.onmouseleave = () => {
       this.data.isPaint = false;
-      // refresh image of current frame
+      document.getElementsByClassName('frame')[this.data.framesAmount - 1].getContext('2d').drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 300, 150);
     };
   }
 }

@@ -21,7 +21,7 @@ export default class Frame {
     const container = document.getElementsByClassName('frames-container')[0];
     const addFrameBtn = document.getElementsByClassName('add-frame')[0];
 
-    const frame = document.createElement('span');
+    const frame = document.createElement('canvas');
     frame.className = 'frame';
     frame.innerText = ++this.data.framesAmount;
 
@@ -37,6 +37,17 @@ export default class Frame {
 
     container.appendChild(button);
 
-    button.onclick = () => this.createFrame();
+    button.onclick = () => {
+      const canvas = document.getElementById('canvas');
+      const context = canvas.getContext('2d');
+
+      document.getElementsByClassName('frame')[this.data.framesAmount - 1].getContext('2d').drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 300, 150);
+      this.data.clickX = [];
+      this.data.clickY = [];
+      this.data.clickDrag = [];
+      this.data.clickSize = [];
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      this.createFrame();
+    };
   }
 }

@@ -23,7 +23,7 @@ export default class Player {
     const fpsInfo = document.createElement('span');
     fpsInfo.innerText = `${fps.value} FPS`;
 
-    fps.oninput = () => fpsInfo.innerText = `${fps.value} FPS`;
+    fps.oninput = () => { fpsInfo.innerText = `${fps.value} FPS`; };
 
     const runAnimationBtn = document.createElement('span');
     runAnimationBtn.className = 'button';
@@ -42,20 +42,19 @@ export default class Player {
 
     runAnimationBtn.onclick = () => {
       let i = 0;
-        const frames = document.querySelectorAll('.frame');
-        setInterval(() => {
-          console.log(i);
-          if(i === frames.length) {
-            i = 0
-          };
-          player.getContext('2d').clearRect(0,0,player.width,player.height);
-          player.getContext('2d').drawImage(frames[i],0,0);
-          i++
-        },1000 / fps.value);
-    }
+      const frames = document.querySelectorAll('.frame');
+      setInterval(() => {
+        if (i === frames.length) {
+          i = 0;
+        }
+        player.getContext('2d').clearRect(0, 0, player.width, player.height);
+        player.getContext('2d').drawImage(frames[i], 0, 0);
+        i++;
+      }, 1000 / fps.value);
+    };
 
     fullScreenBtn.onclick = () => {
       player.requestFullscreen();
-    }
+    };
   }
 }

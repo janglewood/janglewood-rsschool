@@ -9,7 +9,7 @@ class App {
       mainScreenIsActive: true,
       userFileName: 'Type file name here',
       penSize: 1,
-      currentTool: null,
+      currentTool: 'PEN',
     };
   }
 

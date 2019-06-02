@@ -26,18 +26,48 @@ export default class Frame {
     frame.innerText = ++this.data.framesAmount;
 
     container.insertBefore(frame, addFrameBtn);
+
+    const cloneFrameBtn = document.createElement('span');
+    cloneFrameBtn.className = 'button';
+    cloneFrameBtn.innerText = 'Clone';
+
+    cloneFrameBtn.onclick = () => {
+      const clone = this.createFrame();
+      clone.getContext('2d').drawImage(frame, 0, 0);
+      container.insertBefore(clone, addFrameBtn);
+    };
+
+    const removeFrameBtn = document.createElement('span');
+    removeFrameBtn.className = 'button';
+    removeFrameBtn.innerText = 'Remove';
+
+    removeFrameBtn.onclick = () => {
+      if (document.querySelectorAll('.frame').length === 1) {
+        console.log('You can not remove a single frame');
+        return;
+      }
+      frame.remove();
+      console.log(document.querySelectorAll('.frame').length);
+      cloneFrameBtn.remove();
+      removeFrameBtn.remove();
+    };
+
+    container.insertBefore(cloneFrameBtn, frame);
+    container.insertBefore(removeFrameBtn, frame);
+
+    return frame;
   }
 
   createAddFrameBtn() {
     const container = document.getElementsByClassName('frames-container')[0];
 
-    const button = document.createElement('span');
-    button.classList.add('add-frame', 'button');
-    button.innerText = 'Add new frame';
+    const addFrameBtn = document.createElement('span');
+    addFrameBtn.classList.add('add-frame', 'button');
+    addFrameBtn.innerText = 'Add new frame';
 
-    container.appendChild(button);
+    container.appendChild(addFrameBtn);
 
-    button.onclick = () => {
+    addFrameBtn.onclick = () => {
       const canvas = document.getElementById('canvas');
       const context = canvas.getContext('2d');
 

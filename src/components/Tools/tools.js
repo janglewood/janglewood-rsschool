@@ -14,6 +14,8 @@ export default class Tools {
 
     this.createPenSize();
     this.createToolsContainer();
+
+    document.querySelector(`.x${this.data.penSize}`).style.borderColor = '#fabd4cee';
   }
 
   createPenSize() {

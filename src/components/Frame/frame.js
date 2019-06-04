@@ -23,37 +23,13 @@ export default class Frame {
 
     const frame = document.createElement('canvas');
     frame.className = 'frame';
-    frame.innerText = ++this.data.framesAmount;
+    // frame.innerText = ++this.data.framesAmount; // add span into canvas for this feature
+    this.data.framesAmount++;
 
     container.insertBefore(frame, addFrameBtn);
 
-    const cloneFrameBtn = document.createElement('span');
-    cloneFrameBtn.className = 'button';
-    cloneFrameBtn.innerText = 'Clone';
-
-    cloneFrameBtn.onclick = () => {
-      const clone = this.createFrame();
-      clone.getContext('2d').drawImage(frame, 0, 0);
-      container.insertBefore(clone, addFrameBtn);
-    };
-
-    const removeFrameBtn = document.createElement('span');
-    removeFrameBtn.className = 'button';
-    removeFrameBtn.innerText = 'Remove';
-
-    removeFrameBtn.onclick = () => {
-      if (document.querySelectorAll('.frame').length === 1) {
-        console.log('You can not remove a single frame');
-        return;
-      }
-      frame.remove();
-      console.log(document.querySelectorAll('.frame').length);
-      cloneFrameBtn.remove();
-      removeFrameBtn.remove();
-    };
-
-    container.insertBefore(cloneFrameBtn, frame);
-    container.insertBefore(removeFrameBtn, frame);
+    const cloneFrameBtn = this.createCloneFrameBtn(frame, addFrameBtn);
+    this.createRemoveBtn(frame, cloneFrameBtn);
 
     return frame;
   }
@@ -70,7 +46,6 @@ export default class Frame {
     addFrameBtn.onclick = () => {
       const canvas = document.getElementById('canvas');
       const context = canvas.getContext('2d');
-
       document.getElementsByClassName('frame')[this.data.framesAmount - 1].getContext('2d').drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 300, 150);
       this.data.clickX = [];
       this.data.clickY = [];
@@ -79,5 +54,40 @@ export default class Frame {
       context.clearRect(0, 0, canvas.width, canvas.height);
       this.createFrame();
     };
+  }
+
+  createCloneFrameBtn(frame, addFrameBtn) {
+    const container = document.getElementsByClassName('frames-container')[0];
+
+    const cloneFrameBtn = document.createElement('span');
+    cloneFrameBtn.className = 'button';
+    cloneFrameBtn.innerText = 'Clone';
+
+    cloneFrameBtn.onclick = () => {
+      const clone = this.createFrame();
+      clone.getContext('2d').drawImage(frame, 0, 0);
+      container.insertBefore(clone, addFrameBtn);
+    };
+    container.insertBefore(cloneFrameBtn, frame);
+    return cloneFrameBtn;
+  }
+
+  createRemoveBtn(frame, cloneFrameBtn) {
+    const container = document.getElementsByClassName('frames-container')[0];
+
+    const removeFrameBtn = document.createElement('span');
+    removeFrameBtn.className = 'button';
+    removeFrameBtn.innerText = 'Remove';
+
+    removeFrameBtn.onclick = () => {
+      if (document.querySelectorAll('.frame').length === 1) {
+        console.log('You can not remove a single frame');
+        return;
+      }
+      frame.remove();
+      cloneFrameBtn.remove();
+      removeFrameBtn.remove();
+    };
+    container.insertBefore(removeFrameBtn, frame);
   }
 }

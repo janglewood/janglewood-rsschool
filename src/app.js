@@ -10,6 +10,7 @@ class App {
       userFileName: 'Type file name here',
       penSize: 1,
       currentTool: 'PEN',
+      currentFrame: 1,
     };
   }
 

@@ -3,11 +3,59 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+    position: relative;
+}
+.frames-container>span {
+    display: flex;
 }
 .frame {
-    width: 99px;
-    height: 99px;
+    width: 120px;
+    height: 120px;
     background-color: white;
-    border: 1px solid black;
+    border: 2px solid black;
+    border-radius: 5px;
+}
+.selected {
+    border-color: #fabd4c;
+    border-width: 3px;
+}
+.frame-container {
     position: relative;
+}
+.clone-frame.button {
+    display: none;
+    position: absolute;
+    bottom: 4px;
+    left: 0px;
+    padding: 0 5px;
+}
+.clone-frame>img {
+    width: 18px;
+    height: 100%;
+}
+.remove-frame.button {
+    display: none;
+    position: absolute;
+    bottom: 4px;
+    right: 0px;
+    padding: 0 px;
+}
+.remove-frame>img {
+    width: 18px;
+    height: 100%;
+}
+.frame-number {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 30px;
+    padding: 0 10px;
+    background-color: #fabd4cee;
+    font-size: 16px;
+    color: #000000;
+    border-radius: 5px;
+    text-align: center;
 }

@@ -52,12 +52,7 @@ export default class DrawField {
     }
 
     canvas.onmousedown = (e) => {
-      if (this.data.currentTool === 'PEN') {
-        this.data.isPaint = true;
-      } else {
-        console.log('Tool is not selected');
-        return;
-      }
+      this.data.isPaint = true;
 
       if (this.data.isPaint) {
         addClick(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop, false, this.data);
@@ -74,12 +69,12 @@ export default class DrawField {
 
     canvas.onmouseup = () => {
       this.data.isPaint = false;
-      document.getElementsByClassName('frame')[this.data.framesAmount - 1].getContext('2d').drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 300, 150);
+      document.getElementsByClassName('frame')[this.data.currentFrame - 1].getContext('2d').drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 300, 150);
     };
 
     canvas.onmouseleave = () => {
       this.data.isPaint = false;
-      document.getElementsByClassName('frame')[this.data.framesAmount - 1].getContext('2d').drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 300, 150);
+      document.getElementsByClassName('frame')[this.data.currentFrame - 1].getContext('2d').drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 300, 150);
     };
   }
 }

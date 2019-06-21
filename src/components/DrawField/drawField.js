@@ -14,9 +14,13 @@ export default class DrawField {
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
 
-    canvas.setAttribute('width', '330');
-    canvas.setAttribute('height', '330');
+    canvas.setAttribute('width', '32');
+    canvas.setAttribute('height', '32');
     canvas.setAttribute('id', 'canvas');
+    canvas.style.width = `${canvas.width * 20}px`;
+    canvas.style.height = `${canvas.height * 20}px`; //20 -> 10 -> 5
+    canvas.style.imageRendering = 'pixelated';
+    context.imageSmoothingEnabled = false;
 
     canvasContainer.appendChild(canvas);
     container.appendChild(canvasContainer);
@@ -27,15 +31,15 @@ export default class DrawField {
     this.data.clickSize = [];
 
     function addClick(x, y, dragging, data) {
-      data.clickX.push(x);
-      data.clickY.push(y);
+      data.clickX.push(x / 20);
+      data.clickY.push(y / 20);
       data.clickDrag.push(dragging);
       data.clickSize.push(data.penSize);
     }
 
     function redraw(data) {
       context.strokeStyle = '000000';
-      context.lineJoin = 'round';
+      context.lineJoin = 'miter';
 
       for (let i = 0; i < data.clickX.length; i++) {
         context.beginPath();
@@ -66,15 +70,21 @@ export default class DrawField {
         redraw(this.data);
       }
     };
-
     canvas.onmouseup = () => {
       this.data.isPaint = false;
       document.getElementsByClassName('frame')[this.data.currentFrame - 1].getContext('2d').drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 300, 150);
+      // const canvasy = document.getElementById('canvas');
+      // imageData = canvasy.getContext('2d').getImageData(0, 0, canvasy.width, canvasy.height);
+      // const frame = document.querySelector('.frame');
+      // frame.getContext('2d').putImageData(imageData, 0, 0, 0, 0, frame.width, frame.height);
     };
 
     canvas.onmouseleave = () => {
       this.data.isPaint = false;
       document.getElementsByClassName('frame')[this.data.currentFrame - 1].getContext('2d').drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 300, 150);
+      // const frame = document.querySelector('.frame');
+      // frame.getContext('2d').putImageData(imageData, 0, 0, 0, 0, 100, 20);
+      // console.log(imageData);
     };
   }
 }

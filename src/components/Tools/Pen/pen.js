@@ -11,6 +11,8 @@ export default class Pen {
     pen.className = 'pen';
     pen.innerText = 'PEN';
     container.appendChild(pen);
-    pen.onclick = () => { this.data.currentTool = 'PEN'; };
+    pen.onclick = () => {
+      this.data.currentTool = 'PEN';
+    };
   }
 }

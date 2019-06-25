@@ -1,0 +1,28 @@
+.modal-frame {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #242323e8;
+    align-items: center;
+    width: 500px;
+    height: 250px;
+    position: absolute;
+    align-self: center;
+    justify-self: center;
+    text-align: center;
+    border-radius: 5px;
+}
+.modal-frame>.title {
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: bold;
+    padding-bottom: 30px;
+}
+
+.modal-frame>.button-container {
+    display: flex;
+    flex-direction: row;
+    width: 100px;
+    justify-content: space-between;
+    align-items: center;
+}

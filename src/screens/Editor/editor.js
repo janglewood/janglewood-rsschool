@@ -12,14 +12,16 @@ export default class Editor {
   }
 
   render() {
-    this.data.mainScreenIsActive = false;
+    this.data.mainScreenIsActive = true;
     const tools = new Tools(this.data);
     const frame = new Frame(this.data);
     const drawField = new DrawField(this.data, this.settings);
     const player = new Player(this.data);
     const settings = new Settings(this.data, this.settings);
 
-    document.getElementsByClassName('preview')[0].remove();
+    if (document.getElementsByClassName('preview')[0]) {
+      document.getElementsByClassName('preview')[0].remove();
+    }
 
     const editorContainer = document.createElement('main');
     editorContainer.className = 'editor-container';

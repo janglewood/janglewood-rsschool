@@ -11,7 +11,6 @@ export default class Tools {
     leftSidebar.className = 'left-sidebar';
 
     document.getElementsByClassName('editor-container')[0].appendChild(leftSidebar);
-
     this.createPenSize();
     this.createToolsContainer();
 

@@ -8,10 +8,13 @@ export default class Header {
 
   addFileNameInput() {
     const header = document.querySelector('header');
+    if (header.getElementsByClassName('file-name')[0]) {
+      return;
+    }
     const headerBtn = document.querySelector('header>.button');
 
     const input = document.createElement('input');
-    input.classname = 'file-name';
+    input.className = 'file-name';
     input.type = 'text';
     input.placeholder = this.data.userFileName;
 

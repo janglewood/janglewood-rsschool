@@ -2,19 +2,22 @@ import Tools from '../../components/Tools/tools';
 import Frame from '../../components/Frame/frame';
 import DrawField from '../../components/DrawField/drawField';
 import Player from '../../components/Player/player';
+import Settings from '../../components/Settings/settings';
 import './editor.css';
 
 export default class Editor {
-  constructor(data) {
+  constructor(data, settings) {
     this.data = data;
+    this.settings = settings;
   }
 
   render() {
     this.data.mainScreenIsActive = false;
     const tools = new Tools(this.data);
     const frame = new Frame(this.data);
-    const drawField = new DrawField(this.data);
+    const drawField = new DrawField(this.data, this.settings);
     const player = new Player(this.data);
+    const settings = new Settings(this.data, this.settings);
 
     document.getElementsByClassName('preview')[0].remove();
 
@@ -26,5 +29,6 @@ export default class Editor {
     frame.render();
     drawField.render();
     player.render();
+    settings.render();
   }
 }

@@ -12,6 +12,9 @@ class App {
       currentTool: 'PEN',
       currentFrame: 1,
     };
+    this.sett = {
+      canvasSize: 32,
+    };
   }
 
   start() {
@@ -23,7 +26,7 @@ class App {
   }
 
   createEditor() {
-    const editor = new Editor(this.state);
+    const editor = new Editor(this.state, this.sett);
     const header = new Header(this.state);
     header.addFileNameInput();
     editor.render();

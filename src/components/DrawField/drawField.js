@@ -1,8 +1,26 @@
 import './drawField.css';
 
 export default class DrawField {
-  constructor(data) {
+  constructor(data, settings) {
     this.data = data;
+    this.settings = settings;
+  }
+
+  setCanvasSize(canvas, context) {
+    canvas.setAttribute('width', this.settings.canvasSize);
+    canvas.setAttribute('height', this.settings.canvasSize);
+    canvas.setAttribute('id', 'canvas');
+    canvas.style.width = `${canvas.width * 20 / (this.settings.canvasSize / 32)}px`;
+    canvas.style.height = `${canvas.height * 20 / (this.settings.canvasSize / 32)}px`;
+    canvas.style.imageRendering = 'pixelated';
+    context.imageSmoothingEnabled = false;
+  }
+
+  clearFrame() {
+    const currentFrameCanvas = document.getElementsByClassName('frame')[this.data.currentFrame - 1];
+    const currentFrameContext = currentFrameCanvas.getContext('2d');
+    currentFrameContext.clearRect(0, 0, currentFrameCanvas.width, currentFrameCanvas.height);
+    return currentFrameContext;
   }
 
   render() {
@@ -14,13 +32,7 @@ export default class DrawField {
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
 
-    canvas.setAttribute('width', '32');
-    canvas.setAttribute('height', '32');
-    canvas.setAttribute('id', 'canvas');
-    canvas.style.width = `${canvas.width * 20}px`;
-    canvas.style.height = `${canvas.height * 20}px`; //20 -> 10 -> 5
-    canvas.style.imageRendering = 'pixelated';
-    context.imageSmoothingEnabled = false;
+    this.setCanvasSize(canvas, context);
 
     canvasContainer.appendChild(canvas);
     container.appendChild(canvasContainer);
@@ -30,9 +42,9 @@ export default class DrawField {
     this.data.clickDrag = [];
     this.data.clickSize = [];
 
-    function addClick(x, y, dragging, data) {
-      data.clickX.push(x / 20);
-      data.clickY.push(y / 20);
+    function addClick(x, y, dragging, data, sett) {
+      data.clickX.push(x / (20 / (sett.canvasSize / 32)));
+      data.clickY.push(y / (20 / (sett.canvasSize / 32)));
       data.clickDrag.push(dragging);
       data.clickSize.push(data.penSize);
     }
@@ -59,20 +71,21 @@ export default class DrawField {
       this.data.isPaint = true;
 
       if (this.data.isPaint) {
-        addClick(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop, false, this.data);
+        addClick(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop, false, this.data, this.settings);
         redraw(this.data);
       }
     };
 
     canvas.onmousemove = (e) => {
       if (this.data.isPaint) {
-        addClick(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop, true, this.data);
+        addClick(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop, true, this.data, this.settings);
         redraw(this.data);
       }
     };
     canvas.onmouseup = () => {
       this.data.isPaint = false;
-      document.getElementsByClassName('frame')[this.data.currentFrame - 1].getContext('2d').drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 300, 150);
+      const currentFrameContext = this.clearFrame();
+      currentFrameContext.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 300, 150);
       // const canvasy = document.getElementById('canvas');
       // imageData = canvasy.getContext('2d').getImageData(0, 0, canvasy.width, canvasy.height);
       // const frame = document.querySelector('.frame');
@@ -81,7 +94,8 @@ export default class DrawField {
 
     canvas.onmouseleave = () => {
       this.data.isPaint = false;
-      document.getElementsByClassName('frame')[this.data.currentFrame - 1].getContext('2d').drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 300, 150);
+      const currentFrameContext = this.clearFrame();
+      currentFrameContext.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 300, 150);
       // const frame = document.querySelector('.frame');
       // frame.getContext('2d').putImageData(imageData, 0, 0, 0, 0, 100, 20);
       // console.log(imageData);

@@ -8,8 +8,8 @@ export default class Player {
   render() {
     const container = document.getElementsByClassName('editor-container')[0];
 
-    const playerContainer = document.createElement('span');
-    playerContainer.className = 'player-container';
+    const rightSidebar = document.createElement('span');
+    rightSidebar.className = 'right-sidebar';
 
     const player = document.createElement('canvas');
     player.className = 'player';
@@ -33,12 +33,12 @@ export default class Player {
     fullScreenBtn.className = 'button';
     fullScreenBtn.innerText = 'Full screen';
 
-    playerContainer.appendChild(fullScreenBtn);
-    playerContainer.appendChild(runAnimationBtn);
-    playerContainer.appendChild(fps);
-    playerContainer.appendChild(fpsInfo);
-    playerContainer.appendChild(player);
-    container.appendChild(playerContainer);
+    rightSidebar.appendChild(fullScreenBtn);
+    rightSidebar.appendChild(runAnimationBtn);
+    rightSidebar.appendChild(fps);
+    rightSidebar.appendChild(fpsInfo);
+    rightSidebar.appendChild(player);
+    container.appendChild(rightSidebar);
 
     runAnimationBtn.onclick = () => {
       let i = 0;

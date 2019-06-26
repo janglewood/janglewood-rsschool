@@ -69,7 +69,6 @@ export default class DrawField {
 
     canvas.onmousedown = (e) => {
       this.data.isPaint = true;
-
       if (this.data.isPaint) {
         addClick(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop, false, this.data, this.settings);
         redraw(this.data);

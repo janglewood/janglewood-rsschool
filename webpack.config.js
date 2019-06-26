@@ -20,16 +20,8 @@ module.exports = {
         use: ['style-loader', 'css-loader'],
       },
       {
-        test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-        use: ['file-loader'],
-      },
-      {
-        test: /.*\.(gif|png|jpe?g|svg)$/i,
-        use: [
-          {
-            loader: 'file-loader?name=[name].[ext]',
-          },
-        ],
+        test: /\.(woff(2)?|ttf|eot|svg|gif|png|jpe?g|cur)(\?v=\d+\.\d+\.\d+)?$/,
+        use: 'file-loader?name=[name].[ext]',
       },
     ],
   },

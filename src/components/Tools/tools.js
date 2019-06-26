@@ -1,5 +1,7 @@
 import './tools.css';
 import Pen from './Pen/pen';
+import Circle from './Circle/circle';
+// import image from '../../assets/icons/pen.png';
 
 export default class Tools {
   constructor(data) {
@@ -15,6 +17,8 @@ export default class Tools {
     this.createToolsContainer();
 
     document.querySelector(`.x${this.data.penSize}`).style.borderColor = '#fabd4cee';
+    // document.getElementsByClassName('editor-container')[0].style.cursor = `url(${image}), pointer`;
+    // document.body.style.backgroundImage = `url(${image})`;
   }
 
   createPenSize() {
@@ -36,11 +40,13 @@ export default class Tools {
 
   createToolsContainer() {
     const pen = new Pen(this.data);
+    const circle = new Circle(this.data);
 
     const toolsContainer = document.createElement('span');
     toolsContainer.className = 'tools-container';
 
     document.getElementsByClassName('left-sidebar')[0].appendChild(toolsContainer);
-    pen.createPen();
+    pen.createPenTool();
+    circle.createCircleTool();
   }
 }

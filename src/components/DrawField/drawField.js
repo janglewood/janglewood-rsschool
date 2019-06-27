@@ -42,9 +42,15 @@ export default class DrawField {
     this.data.clickDrag = [];
     this.data.clickSize = [];
 
-    function addClick(x, y, dragging, data, sett) {
-      data.clickX.push(x / (20 / (sett.canvasSize / 32)));
-      data.clickY.push(y / (20 / (sett.canvasSize / 32)));
+    let startX;
+    let startY;
+    let finishX;
+    let finishY;
+    let isDown;
+
+    function addClick(x, y, dragging, data, settings) {
+      data.clickX.push(x / (20 / (settings.canvasSize / 32)));
+      data.clickY.push(y / (20 / (settings.canvasSize / 32)));
       data.clickDrag.push(dragging);
       data.clickSize.push(data.penSize);
     }
@@ -67,22 +73,52 @@ export default class DrawField {
       }
     }
 
+    function addStartPoints(e, settings) {
+      isDown = true;
+      startX = (e.pageX - canvas.offsetLeft) / (20 / (settings.canvasSize / 32));
+      startY = (e.pageY - canvas.offsetTop) / (20 / (settings.canvasSize / 32));
+      context.beginPath();
+      context.moveTo(startX, startY);
+    }
+
+    function draw(e, settings) {
+      context.strokeStyle = '000000';
+      context.lineJoin = 'miter';
+
+      context.beginPath();
+      context.moveTo(startX, startY);
+
+      finishX = (e.pageX - canvas.offsetLeft) / (20 / (settings.canvasSize / 32));
+      finishY = (e.pageY - canvas.offsetTop) / (20 / (settings.canvasSize / 32));
+      context.lineTo(finishX, finishY);
+      context.closePath();
+      context.stroke();
+    }
+
     canvas.onmousedown = (e) => {
       this.data.isPaint = true;
-      if (this.data.isPaint) {
+      if (this.data.isPaint && this.data.currentTool === 'PEN') {
         addClick(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop, false, this.data, this.settings);
         redraw(this.data);
+      } else if (this.data.currentTool === 'STRAIGHT-LINE') {
+        addStartPoints(e, this.settings);
       }
     };
 
     canvas.onmousemove = (e) => {
-      if (this.data.isPaint) {
+      if (this.data.isPaint && this.data.currentTool === 'PEN') {
         addClick(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop, true, this.data, this.settings);
         redraw(this.data);
+      } if (this.data.currentTool === 'STRAIGHT-LINE' && isDown) {
+        draw(e, this.settings);
       }
     };
     canvas.onmouseup = () => {
+      if (this.data.currentTool === 'STRAIGHT-LINE' && isDown) {
+        isDown = false;
+      }
       this.data.isPaint = false;
+      isDown = false;
       const currentFrameContext = this.clearFrame();
       currentFrameContext.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 300, 150);
       // const canvasy = document.getElementById('canvas');
@@ -93,6 +129,7 @@ export default class DrawField {
 
     canvas.onmouseleave = () => {
       this.data.isPaint = false;
+      isDown = false;
       const currentFrameContext = this.clearFrame();
       currentFrameContext.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 300, 150);
       // const frame = document.querySelector('.frame');

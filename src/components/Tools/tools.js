@@ -1,6 +1,6 @@
 import './tools.css';
 import Pen from './Pen/pen';
-import Circle from './Circle/circle';
+import StraightLine from './StraightLine/straightLine';
 // import image from '../../assets/icons/pen.png';
 
 export default class Tools {
@@ -40,13 +40,29 @@ export default class Tools {
 
   createToolsContainer() {
     const pen = new Pen(this.data);
-    const circle = new Circle(this.data);
+    const straightLine = new StraightLine(this.data);
 
     const toolsContainer = document.createElement('span');
     toolsContainer.className = 'tools-container';
 
     document.getElementsByClassName('left-sidebar')[0].appendChild(toolsContainer);
     pen.createPenTool();
-    circle.createCircleTool();
+    straightLine.createStraightLineTool();
+  }
+
+  static unselect() {
+    const tools = [...document.querySelectorAll('.tool')];
+    for (let i = 0; i < tools.length; i++) {
+      tools[i].style.borderColor = '#8f8f8f';
+    }
+  }
+
+  static toolSelector() {
+    this.unselect();
+    console.log('!!!');
   }
 }
+
+[...document.querySelectorAll('.tool')].forEach(() => {
+  Tools.toolSelector();
+});

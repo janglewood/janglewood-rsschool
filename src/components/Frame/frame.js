@@ -145,9 +145,13 @@ export default class Frame {
         } else {
           this.chooseCurrentFrame(frames[this.data.currentFrame - 2].querySelector('canvas'));
         }
+      } else {
+        this.chooseCurrentFrame(frames[this.data.currentFrame - 1].querySelector('canvas'));
       }
+
       frame.remove();
       this.data.framesAmount--;
+      this.data.currentFrame--;
 
       for (let i = 1; i <= frames.length; i++) {
         frames[i - 1].querySelector('.frame-number').innerText = i;
@@ -170,12 +174,12 @@ export default class Frame {
       selected.classList.remove('selected');
     }
     frame.classList.add('selected');
-    
+
     this.data.clickX = [];
     this.data.clickY = [];
     this.data.clickDrag = [];
     this.data.clickSize = [];
-    
+
     if (this.data.framesAmount > 1) {
       const canvas = document.getElementById('canvas');
       canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);

@@ -5,6 +5,7 @@
     align-items: center;
     order: 2;
     position: relative;
+    overflow: auto;
 }
 .frames-container>span {
     display: flex;

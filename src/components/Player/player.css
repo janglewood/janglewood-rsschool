@@ -6,5 +6,6 @@
 .player {
     width: 150px;
     height: 150px;
-    background-color: #ffffff;
+    background-image: url('../../assets/images/canvas-background.png');
+    background-size: 75%;
 }

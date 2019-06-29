@@ -16,10 +16,9 @@ export default class DrawField {
     context.imageSmoothingEnabled = false;
   }
 
-  clearFrame() {
-    const currentFrameCanvas = document.getElementsByClassName('frame')[this.data.currentFrame - 1];
-    const currentFrameContext = currentFrameCanvas.getContext('2d');
-    currentFrameContext.clearRect(0, 0, currentFrameCanvas.width, currentFrameCanvas.height);
+  clearFrame(frame) {
+    const currentFrameContext = frame.getContext('2d');
+    currentFrameContext.clearRect(0, 0, frame.width, frame.height);
     return currentFrameContext;
   }
 
@@ -49,12 +48,12 @@ export default class DrawField {
     this.data.finishX = [];
     this.data.finishY = [];
 
-    function addClick(x, y, dragging, data, settings) {
+    function addClick(x, y, dragging, data, settings, primary) {
       data.clickX.push(x / (20 / (settings.canvasSize / 32)));
       data.clickY.push(y / (20 / (settings.canvasSize / 32)));
       data.clickDrag.push(dragging);
       data.clickSize.push(data.penSize);
-      data.drawColor.push(settings.primaryColor);
+      data.drawColor.push(primary ? settings.primaryColor : settings.secondaryColor);
     }
 
     function redraw(data) {
@@ -75,10 +74,10 @@ export default class DrawField {
       }
     }
 
-    function addStartPoints(e, data, settings) {
+    function addStartPoints(e, data, settings, primary) {
       data.startX.push((e.pageX - canvas.offsetLeft) / (20 / (settings.canvasSize / 32)));
       data.startY.push((e.pageY - canvas.offsetTop) / (20 / (settings.canvasSize / 32)));
-      data.lineColor.push(settings.primaryColor);
+      data.lineColor.push(primary ? settings.primaryColor : settings.secondaryColor);
     }
 
     function addFinishPoints(e, data, settings) {
@@ -100,19 +99,35 @@ export default class DrawField {
       context.stroke();
     }
 
+    canvas.oncontextmenu = (e) => {
+      e.preventDefault();
+    };
+
     canvas.onmousedown = (e) => {
       this.data.isPaint = true;
       if (this.data.isPaint && this.data.currentTool === 'PEN') {
-        addClick(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop, false, this.data, this.settings);
+        if (e.which === 3) {
+          addClick(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop, false, this.data, this.settings, false);
+        } else {
+          addClick(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop, false, this.data, this.settings, true);
+        }
         redraw(this.data, this.settings);
       } else if (this.data.currentTool === 'STRAIGHT-LINE') {
-        addStartPoints(e, this.data, this.settings);
+        if (e.which === 3) {
+          addStartPoints(e, this.data, this.settings, false);
+        } else {
+          addStartPoints(e, this.data, this.settings, true);
+        }
       }
     };
 
     canvas.onmousemove = (e) => {
       if (this.data.isPaint && this.data.currentTool === 'PEN') {
-        addClick(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop, true, this.data, this.settings);
+        if (e.which === 3) {
+          addClick(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop, true, this.data, this.settings, false);
+        } else {
+          addClick(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop, true, this.data, this.settings, true);
+        }
         redraw(this.data, this.settings);
       }
     };
@@ -122,12 +137,8 @@ export default class DrawField {
         drawLine(this.data);
       }
       this.data.isPaint = false;
-      const currentFrameContext = this.clearFrame();
+      const currentFrameContext = this.clearFrame(document.getElementsByClassName('frame')[this.data.currentFrame - 1]);
       currentFrameContext.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 300, 150);
-      // const canvasy = document.getElementById('canvas');
-      // imageData = canvasy.getContext('2d').getImageData(0, 0, canvasy.width, canvasy.height);
-      // const frame = document.querySelector('.frame');
-      // frame.getContext('2d').putImageData(imageData, 0, 0, 0, 0, frame.width, frame.height);
     };
 
     canvas.onmouseleave = (e) => {
@@ -136,11 +147,8 @@ export default class DrawField {
         drawLine(this.data);
       }
       this.data.isPaint = false;
-      const currentFrameContext = this.clearFrame();
+      const currentFrameContext = this.clearFrame(document.getElementsByClassName('frame')[this.data.currentFrame - 1]);
       currentFrameContext.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 300, 150);
-      // const frame = document.querySelector('.frame');
-      // frame.getContext('2d').putImageData(imageData, 0, 0, 0, 0, 100, 20);
-      // console.log(imageData);
     };
   }
 }

@@ -37,7 +37,7 @@ export default class Settings {
 
     const dataLength = this.data.startX.length - 1;
 
-    for (let i = 0; i < dataLength; i++) {
+    for (let i = 0; i <= dataLength; i++) {
       context.strokeStyle = this.data.lineColor[i];
       context.lineJoin = 'miter';
       context.beginPath();
@@ -64,7 +64,7 @@ export default class Settings {
         drawField.setCanvasSize(canvas, canvas.getContext('2d'));
         this.redraw();
         this.drawLine();
-        const currentFrameContext = drawField.clearFrame(this.data);
+        const currentFrameContext = drawField.clearFrame(document.getElementsByClassName('frame')[this.data.currentFrame - 1]);
         currentFrameContext.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 300, 150);
         canvas.style.backgroundSize = `${32 / i * 100}%`;
       };

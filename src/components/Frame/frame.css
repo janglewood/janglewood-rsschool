@@ -3,17 +3,20 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+    order: 2;
     position: relative;
 }
 .frames-container>span {
     display: flex;
 }
 .frame {
-    width: 120px;
-    height: 120px;
+    width: 96px;
+    height: 96px;
     background-color: white;
     border: 2px solid black;
     border-radius: 5px;
+    background-image: url('../../assets/images/canvas-background.png');
+    background-size: 75%;
 }
 .selected {
     border-color: #fabd4c;

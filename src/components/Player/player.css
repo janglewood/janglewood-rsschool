@@ -1,6 +1,7 @@
 .right-sidebar {
     display: flex;
     flex-direction: column;
+    order: 4;
 }
 .player {
     width: 150px;

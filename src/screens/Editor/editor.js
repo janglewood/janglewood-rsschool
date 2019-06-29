@@ -28,8 +28,8 @@ export default class Editor {
     document.getElementsByClassName('page-wrapper')[0].appendChild(editorContainer);
 
     tools.render();
-    frame.render();
     drawField.render();
+    frame.render();
     player.render();
     settings.render();
   }

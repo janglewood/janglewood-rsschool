@@ -111,34 +111,44 @@ export default class Frame {
   }
 
   createCloneFrameBtn(frameContainer, frame) {
+    const canvas = document.getElementById('canvas');
     const cloneFrameBtn = document.createElement('span');
     cloneFrameBtn.classList.add('clone-frame', 'button');
     cloneFrameBtn.innerHTML = '<img src="../../assets/icons/clone.svg">';
 
     cloneFrameBtn.onclick = () => {
       const clone = this.createFrame();
-      clone.querySelector('canvas').getContext('2d').drawImage(frame, 0, 0);
+      const cloneFrame = clone.querySelector('canvas');
+      cloneFrame.getContext('2d').drawImage(frame, 0, 0);
+      canvas.getContext('2d').drawImage(cloneFrame, 0, 0, cloneFrame.width, cloneFrame.height, 0, 0, canvas.width, canvas.height);
     };
     frameContainer.appendChild(cloneFrameBtn);
     return cloneFrameBtn;
   }
 
-  createRemoveBtn(frame, cloneFrameBtn) {
+  createRemoveBtn(frame) {
     const removeFrameBtn = document.createElement('span');
     removeFrameBtn.classList.add('remove-frame', 'button');
     removeFrameBtn.innerHTML = '<img src="../../assets/icons/remove.svg">';
 
     removeFrameBtn.onclick = () => {
+      const frames = document.getElementsByClassName('frame-container');
+
       if (document.querySelectorAll('.frame').length === 1) {
-        console.log('You can not remove a single frame');
+        console.warn('You can not remove a single frame');
         return;
       }
+
+      if (this.data.currentFrame === frame.parentNode.querySelector('.frame-number').innerText) {
+        if (this.data.currentFrame === '1') {
+          this.chooseCurrentFrame(frames[this.data.currentFrame].querySelector('canvas'));
+        } else {
+          this.chooseCurrentFrame(frames[this.data.currentFrame - 2].querySelector('canvas'));
+        }
+      }
       frame.remove();
-      cloneFrameBtn.remove();
-      removeFrameBtn.remove();
       this.data.framesAmount--;
 
-      const frames = document.getElementsByClassName('frame-container');
       for (let i = 1; i <= frames.length; i++) {
         frames[i - 1].querySelector('.frame-number').innerText = i;
       }
@@ -155,25 +165,22 @@ export default class Frame {
   }
 
   chooseCurrentFrame(frame) {
-    const selected = document.querySelectorAll('.selected');
-    if (selected.length) {
-      for (let i = 0; i < selected.length; i++) {
-        selected[i].classList.remove('selected');
-      }
+    const selected = document.querySelector('.selected');
+    if (selected) {
+      selected.classList.remove('selected');
     }
     frame.classList.add('selected');
-    this.data.currentFrame = frame.parentNode.querySelector('.frame-number').innerText;
-
+    
     this.data.clickX = [];
     this.data.clickY = [];
     this.data.clickDrag = [];
     this.data.clickSize = [];
-
+    
     if (this.data.framesAmount > 1) {
       const canvas = document.getElementById('canvas');
       canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
-      canvas.getContext('2d').drawImage(frame, 0, 0, canvas.width, canvas.height, 0, 0, 500, 500);
-      // rewrite
+      canvas.getContext('2d').drawImage(frame, 0, 0, frame.width, frame.height, 0, 0, canvas.width, canvas.height);
     }
+    this.data.currentFrame = frame.parentNode.querySelector('.frame-number').innerText;
   }
 }

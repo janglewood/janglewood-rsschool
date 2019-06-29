@@ -66,6 +66,7 @@ export default class Settings {
         this.drawLine();
         const currentFrameContext = drawField.clearFrame(this.data);
         currentFrameContext.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 300, 150);
+        canvas.style.backgroundSize = `${32 / i * 100}%`;
       };
 
       sizeSettings.appendChild(sizeItem);

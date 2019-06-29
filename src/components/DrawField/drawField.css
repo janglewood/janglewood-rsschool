@@ -2,9 +2,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    order: 3;
     width: 60%;
     height: 100%;
 }
 #canvas {
-    background-color: white;
+    background-image: url('../../assets/images/canvas-background.png');
 }

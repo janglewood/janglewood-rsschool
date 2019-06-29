@@ -2,6 +2,7 @@ import './tools.css';
 import Pen from './Pen/pen';
 import StraightLine from './StraightLine/straightLine';
 import ColorSwitcher from './ColorSwitcher/colorSwitcher';
+import Eraser from './Eraser/eraser';
 
 export default class Tools {
   constructor(data, settings) {
@@ -41,6 +42,7 @@ export default class Tools {
     const pen = new Pen(this.data);
     const straightLine = new StraightLine(this.data);
     const colorSwitcher = new ColorSwitcher(this.data, this.settings);
+    const eraser = new Eraser(this.data);
 
     const toolsContainer = document.createElement('span');
     toolsContainer.className = 'tools-container';
@@ -57,6 +59,12 @@ export default class Tools {
     straightLineTool.onclick = () => {
       Tools.toolSelector(straightLineTool);
       this.data.currentTool = 'STRAIGHT-LINE';
+    };
+
+    const eraserTool = eraser.createEraser();
+    eraserTool.onclick = () => {
+      Tools.toolSelector(eraserTool);
+      this.data.currentTool = 'ERASER';
     };
 
     colorSwitcher.render();

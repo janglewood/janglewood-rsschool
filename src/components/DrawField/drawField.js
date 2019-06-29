@@ -99,17 +99,23 @@ export default class DrawField {
       context.stroke();
     }
 
+    function erase(x, y, data, settings) {
+      canvas.getContext('2d').clearRect(x / (20 / (settings.canvasSize / 32)), y / (20 / (settings.canvasSize / 32)), data.penSize, data.penSize);
+    }
+
     canvas.oncontextmenu = (e) => {
       e.preventDefault();
     };
 
     canvas.onmousedown = (e) => {
       this.data.isPaint = true;
+      const x = e.pageX - canvas.offsetLeft;
+      const y = e.pageY - canvas.offsetTop;
       if (this.data.isPaint && this.data.currentTool === 'PEN') {
         if (e.which === 3) {
-          addClick(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop, false, this.data, this.settings, false);
+          addClick(x, y, false, this.data, this.settings, false);
         } else {
-          addClick(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop, false, this.data, this.settings, true);
+          addClick(x, y, false, this.data, this.settings, true);
         }
         redraw(this.data, this.settings);
       } else if (this.data.currentTool === 'STRAIGHT-LINE') {
@@ -118,19 +124,26 @@ export default class DrawField {
         } else {
           addStartPoints(e, this.data, this.settings, true);
         }
+      } else if (this.data.currentTool === 'ERASER') {
+        erase(x, y, this.data, this.settings);
       }
     };
 
     canvas.onmousemove = (e) => {
+      const x = e.pageX - canvas.offsetLeft;
+      const y = e.pageY - canvas.offsetTop;
       if (this.data.isPaint && this.data.currentTool === 'PEN') {
         if (e.which === 3) {
-          addClick(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop, true, this.data, this.settings, false);
+          addClick(x, y, true, this.data, this.settings, false);
         } else {
-          addClick(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop, true, this.data, this.settings, true);
+          addClick(x, y, true, this.data, this.settings, true);
         }
         redraw(this.data, this.settings);
+      } else if (this.data.currentTool === 'ERASER' && this.data.isPaint) {
+        erase(x, y, this.data, this.settings);
       }
     };
+
     canvas.onmouseup = (e) => {
       if (this.data.isPaint && this.data.currentTool === 'STRAIGHT-LINE') {
         addFinishPoints(e, this.data, this.settings);

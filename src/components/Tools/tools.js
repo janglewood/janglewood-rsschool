@@ -1,7 +1,6 @@
 import './tools.css';
 import Pen from './Pen/pen';
 import StraightLine from './StraightLine/straightLine';
-// import image from '../../assets/icons/pen.png';
 
 export default class Tools {
   constructor(data) {
@@ -17,8 +16,6 @@ export default class Tools {
     this.createToolsContainer();
 
     document.querySelector(`.x${this.data.penSize}`).style.borderColor = '#fabd4cee';
-    // document.getElementsByClassName('editor-container')[0].style.cursor = `url(${image}), pointer`;
-    // document.body.style.backgroundImage = `url(${image})`;
   }
 
   createPenSize() {
@@ -51,7 +48,7 @@ export default class Tools {
   }
 
   static unselect() {
-    const tools = [...document.querySelectorAll('.tool')];
+    const tools = document.querySelectorAll('.tool');
     for (let i = 0; i < tools.length; i++) {
       tools[i].style.borderColor = '#8f8f8f';
     }
@@ -63,6 +60,7 @@ export default class Tools {
   }
 }
 
-[...document.querySelectorAll('.tool')].forEach(() => {
+document.querySelectorAll('.tool').forEach((tool) => {
+  console.log(tool);
   Tools.toolSelector();
 });

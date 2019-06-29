@@ -32,6 +32,26 @@ export default class Settings {
     }
   }
 
+  drawLine() {
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+
+    context.strokeStyle = '000000';
+    context.lineJoin = 'miter';
+
+    const dataLength = this.data.startX.length - 1;
+
+    for (let i = 0; i < dataLength; i++) {
+      context.beginPath();
+      context.moveTo(this.data.startX[i], this.data.startY[i]);
+
+      context.lineTo(this.data.finishX[i], this.data.finishY[i]);
+      context.closePath();
+      context.stroke();
+    }
+  }
+
+
   createSizeSettings() {
     const drawField = new DrawField(this.data, this.settings);
     const sizeSettings = document.createElement('span');
@@ -45,6 +65,7 @@ export default class Settings {
         this.settings.canvasSize = i;
         drawField.setCanvasSize(canvas, canvas.getContext('2d'));
         this.redraw();
+        this.drawLine();
         const currentFrameContext = drawField.clearFrame(this.data);
         currentFrameContext.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 300, 150);
       };

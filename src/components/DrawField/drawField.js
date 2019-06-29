@@ -39,11 +39,13 @@ export default class DrawField {
 
     this.data.clickX = [];
     this.data.clickY = [];
+    this.data.drawColor = [];
     this.data.clickDrag = [];
     this.data.clickSize = [];
 
     this.data.startX = [];
     this.data.startY = [];
+    this.data.lineColor = [];
     this.data.finishX = [];
     this.data.finishY = [];
 
@@ -52,13 +54,14 @@ export default class DrawField {
       data.clickY.push(y / (20 / (settings.canvasSize / 32)));
       data.clickDrag.push(dragging);
       data.clickSize.push(data.penSize);
+      data.drawColor.push(settings.primaryColor);
     }
 
     function redraw(data) {
-      context.strokeStyle = '000000';
-      context.lineJoin = 'miter';
-
       for (let i = 0; i < data.clickX.length; i++) {
+        context.strokeStyle = data.drawColor[i];
+        context.lineJoin = 'miter';
+
         context.beginPath();
         if (data.clickDrag[i] && i) {
           context.moveTo(data.clickX[i - 1], data.clickY[i - 1]);
@@ -75,6 +78,7 @@ export default class DrawField {
     function addStartPoints(e, data, settings) {
       data.startX.push((e.pageX - canvas.offsetLeft) / (20 / (settings.canvasSize / 32)));
       data.startY.push((e.pageY - canvas.offsetTop) / (20 / (settings.canvasSize / 32)));
+      data.lineColor.push(settings.primaryColor);
     }
 
     function addFinishPoints(e, data, settings) {
@@ -84,10 +88,9 @@ export default class DrawField {
 
 
     function drawLine(data) {
-      context.strokeStyle = '000000';
-      context.lineJoin = 'miter';
-
       const dataLength = data.startX.length - 1;
+      context.strokeStyle = data.lineColor[dataLength];
+      context.lineJoin = 'miter';
 
       context.beginPath();
       context.moveTo(data.startX[dataLength], data.startY[dataLength]);
@@ -101,7 +104,7 @@ export default class DrawField {
       this.data.isPaint = true;
       if (this.data.isPaint && this.data.currentTool === 'PEN') {
         addClick(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop, false, this.data, this.settings);
-        redraw(this.data);
+        redraw(this.data, this.settings);
       } else if (this.data.currentTool === 'STRAIGHT-LINE') {
         addStartPoints(e, this.data, this.settings);
       }
@@ -110,7 +113,7 @@ export default class DrawField {
     canvas.onmousemove = (e) => {
       if (this.data.isPaint && this.data.currentTool === 'PEN') {
         addClick(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop, true, this.data, this.settings);
-        redraw(this.data);
+        redraw(this.data, this.settings);
       }
     };
     canvas.onmouseup = (e) => {
@@ -127,7 +130,11 @@ export default class DrawField {
       // frame.getContext('2d').putImageData(imageData, 0, 0, 0, 0, frame.width, frame.height);
     };
 
-    canvas.onmouseleave = () => {
+    canvas.onmouseleave = (e) => {
+      if (this.data.isPaint && this.data.currentTool === 'STRAIGHT-LINE') {
+        addFinishPoints(e, this.data, this.settings);
+        drawLine(this.data);
+      }
       this.data.isPaint = false;
       const currentFrameContext = this.clearFrame();
       currentFrameContext.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 300, 150);

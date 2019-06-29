@@ -13,7 +13,7 @@ export default class Editor {
 
   render() {
     this.data.mainScreenIsActive = true;
-    const tools = new Tools(this.data);
+    const tools = new Tools(this.data, this.settings);
     const frame = new Frame(this.data);
     const drawField = new DrawField(this.data, this.settings);
     const player = new Player(this.data);

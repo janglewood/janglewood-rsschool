@@ -10,8 +10,7 @@ export default class Pen {
     const pen = document.createElement('span');
     pen.classList.add('pen', 'tool');
     container.appendChild(pen);
-    pen.onclick = () => {
-      this.data.currentTool = 'PEN';
-    };
+
+    return pen;
   }
 }

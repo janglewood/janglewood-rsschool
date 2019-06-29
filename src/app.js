@@ -17,6 +17,8 @@ class App {
     };
     this.settings = {
       canvasSize: 32,
+      primaryColor: '#000000',
+      secondaryColor: '#ffffff',
     };
   }
 

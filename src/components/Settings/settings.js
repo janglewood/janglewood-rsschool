@@ -15,10 +15,9 @@ export default class Settings {
     const canvas = document.getElementById('canvas');
     const context = canvas.getContext('2d');
 
-    context.strokeStyle = '000000';
-    context.lineJoin = 'miter';
-
     for (let i = 0; i < this.data.clickX.length; i++) {
+      context.strokeStyle = this.data.drawColor[i];
+      context.lineJoin = 'miter';
       context.beginPath();
       if (this.data.clickDrag[i] && i) {
         context.moveTo(this.data.clickX[i - 1], this.data.clickY[i - 1]);
@@ -36,12 +35,11 @@ export default class Settings {
     const canvas = document.getElementById('canvas');
     const context = canvas.getContext('2d');
 
-    context.strokeStyle = '000000';
-    context.lineJoin = 'miter';
-
     const dataLength = this.data.startX.length - 1;
 
     for (let i = 0; i < dataLength; i++) {
+      context.strokeStyle = this.data.lineColor[i];
+      context.lineJoin = 'miter';
       context.beginPath();
       context.moveTo(this.data.startX[i], this.data.startY[i]);
 

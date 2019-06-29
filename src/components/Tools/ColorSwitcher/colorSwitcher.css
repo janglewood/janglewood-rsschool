@@ -1,0 +1,13 @@
+.color-switcher {
+	opacity: 0;
+	display: block;
+	width: 32px;
+	height: 32px;
+	border: none;
+}
+
+.color-switchers-container>span {
+    display: flex;
+    border-radius: 100%;
+    border: 2px solid #000000;
+}

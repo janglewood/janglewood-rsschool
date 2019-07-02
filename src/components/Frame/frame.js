@@ -1,6 +1,6 @@
 import './frame.css';
 import Player from '../Player/player';
-import { fips } from 'crypto';
+import DrawField from '../DrawField/drawField';
 
 export default class Frame {
   constructor(data) {
@@ -184,6 +184,12 @@ export default class Frame {
     this.data.clickY = [];
     this.data.clickDrag = [];
     this.data.clickSize = [];
+    this.data.drawColor = [];
+    this.data.startX = [];
+    this.data.startY = [];
+    this.data.lineColor = [];
+    this.data.finishX = [];
+    this.data.finishY = [];
 
     if (this.data.framesAmount > 1) {
       const canvas = document.getElementById('canvas');

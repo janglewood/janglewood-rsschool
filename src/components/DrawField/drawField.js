@@ -16,10 +16,24 @@ export default class DrawField {
     context.imageSmoothingEnabled = false;
   }
 
-  clearFrame(frame) {
+  static clearFrame(frame) {
     const currentFrameContext = frame.getContext('2d');
     currentFrameContext.clearRect(0, 0, frame.width, frame.height);
     return currentFrameContext;
+  }
+
+  resetCoordsData() {
+    this.data.clickX = [];
+    this.data.clickY = [];
+    this.data.drawColor = [];
+    this.data.clickDrag = [];
+    this.data.clickSize = [];
+
+    this.data.startX = [];
+    this.data.startY = [];
+    this.data.lineColor = [];
+    this.data.finishX = [];
+    this.data.finishY = [];
   }
 
   render() {
@@ -36,21 +50,13 @@ export default class DrawField {
     canvasContainer.appendChild(canvas);
     container.appendChild(canvasContainer);
 
-    this.data.clickX = [];
-    this.data.clickY = [];
-    this.data.drawColor = [];
-    this.data.clickDrag = [];
-    this.data.clickSize = [];
+    this.resetCoordsData();
 
-    this.data.startX = [];
-    this.data.startY = [];
-    this.data.lineColor = [];
-    this.data.finishX = [];
-    this.data.finishY = [];
-
-    function addClick(x, y, dragging, data, settings, primary, s) {
-      data.clickX.push(x / (20 / (settings.canvasSize / 32)));
-      data.clickY.push(y / (20 / (settings.canvasSize / 32)));
+    function addClick(x, y, dragging, data, settings, primary) {
+      const xC = Math.round(x / (20 / (settings.canvasSize / 32)));
+      const yC = Math.round(y / (20 / (settings.canvasSize / 32)));
+      data.clickX.push(xC);
+      data.clickY.push(yC);
       data.clickDrag.push(dragging);
       data.clickSize.push(data.penSize);
       data.drawColor.push(primary ? settings.primaryColor : settings.secondaryColor);
@@ -75,14 +81,14 @@ export default class DrawField {
     }
 
     function addStartPoints(e, data, settings, primary) {
-      data.startX.push((e.pageX - canvas.offsetLeft) / (20 / (settings.canvasSize / 32)));
-      data.startY.push((e.pageY - canvas.offsetTop) / (20 / (settings.canvasSize / 32)));
+      data.startX.push(Math.round((e.pageX - canvas.offsetLeft) / (20 / (settings.canvasSize / 32))));
+      data.startY.push(Math.round((e.pageY - canvas.offsetTop) / (20 / (settings.canvasSize / 32))));
       data.lineColor.push(primary ? settings.primaryColor : settings.secondaryColor);
     }
 
     function addFinishPoints(e, data, settings) {
-      data.finishX.push((e.pageX - canvas.offsetLeft) / (20 / (settings.canvasSize / 32)));
-      data.finishY.push((e.pageY - canvas.offsetTop) / (20 / (settings.canvasSize / 32)));
+      data.finishX.push(Math.round((e.pageX - canvas.offsetLeft) / (20 / (settings.canvasSize / 32))));
+      data.finishY.push(Math.round((e.pageY - canvas.offsetTop) / (20 / (settings.canvasSize / 32))));
     }
 
 
@@ -100,7 +106,10 @@ export default class DrawField {
     }
 
     function erase(x, y, data, settings) {
-      canvas.getContext('2d').clearRect(x / (20 / (settings.canvasSize / 32)), y / (20 / (settings.canvasSize / 32)), data.penSize, data.penSize);
+      const xC = Math.round(x / (20 / (settings.canvasSize / 32)));
+      const yC = Math.round(y / (20 / (settings.canvasSize / 32)));
+
+      canvas.getContext('2d').clearRect(xC, yC, data.penSize, data.penSize);
     }
 
     canvas.oncontextmenu = (e) => {
@@ -125,8 +134,7 @@ export default class DrawField {
           addStartPoints(e, this.data, this.settings, true);
         }
       } else if (this.data.currentTool === 'ERASER') {
-        // erase(x, y, this.data, this.settings);
-        addClick(x, y, false, this.data, this.settings, true, true);
+        erase(x, y, this.data, this.settings);
       }
     };
 
@@ -151,8 +159,9 @@ export default class DrawField {
         drawLine(this.data);
       }
       this.data.isPaint = false;
-      const currentFrameContext = this.clearFrame(document.getElementsByClassName('frame')[this.data.currentFrame - 1]);
+      const currentFrameContext = DrawField.clearFrame(document.getElementsByClassName('frame')[this.data.currentFrame - 1]);
       currentFrameContext.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 300, 150);
+      this.resetCoordsData();
     };
 
     canvas.onmouseleave = (e) => {
@@ -161,8 +170,9 @@ export default class DrawField {
         drawLine(this.data);
       }
       this.data.isPaint = false;
-      const currentFrameContext = this.clearFrame(document.getElementsByClassName('frame')[this.data.currentFrame - 1]);
+      const currentFrameContext = DrawField.clearFrame(document.getElementsByClassName('frame')[this.data.currentFrame - 1]);
       currentFrameContext.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 300, 150);
+      this.resetCoordsData();
     };
   }
 }

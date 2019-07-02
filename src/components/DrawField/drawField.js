@@ -48,7 +48,7 @@ export default class DrawField {
     this.data.finishX = [];
     this.data.finishY = [];
 
-    function addClick(x, y, dragging, data, settings, primary) {
+    function addClick(x, y, dragging, data, settings, primary, s) {
       data.clickX.push(x / (20 / (settings.canvasSize / 32)));
       data.clickY.push(y / (20 / (settings.canvasSize / 32)));
       data.clickDrag.push(dragging);
@@ -125,7 +125,8 @@ export default class DrawField {
           addStartPoints(e, this.data, this.settings, true);
         }
       } else if (this.data.currentTool === 'ERASER') {
-        erase(x, y, this.data, this.settings);
+        // erase(x, y, this.data, this.settings);
+        addClick(x, y, false, this.data, this.settings, true, true);
       }
     };
 

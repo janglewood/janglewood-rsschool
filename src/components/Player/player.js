@@ -1,8 +1,49 @@
 import './player.css';
+import GIF from '../../../gifshot';
 
 export default class Player {
   constructor(data) {
     this.data = data;
+  }
+
+  addBackgroundColor(imageURI, backgroundColor) {
+    console.log(this);
+    const image = new Image();
+    image.src = imageURI;
+
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = 449;
+    canvas.height = 449;
+
+    // Add background color
+    ctx.fillStyle = backgroundColor;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.drawImage(image, 0, 0);
+    console.log(canvas.toDataURL());
+    return canvas.toDataURL();
+  }
+
+  runPlayer() {
+    // const fps = document.querySelector('input[type="range"]');
+    // const player = document.querySelector('.player');
+    const frames = [...document.querySelectorAll('.frame')];
+    const images = frames.map(frame => frame.toDataURL());
+    // const prepareImage = images.map(image => this.addBackgroundColor(image, 'yellow'));
+    GIF.createGIF({
+      images: images,
+      gifWidth: 449,
+      gifHeight: 449,
+    }, (obj) => {
+      if (!obj.error) {
+        const { image } = obj;
+        const animatedImage = document.createElement('img');
+        animatedImage.src = image;
+        document.body.appendChild(animatedImage);
+      }
+    });
   }
 
   render() {
@@ -23,7 +64,9 @@ export default class Player {
     const fpsInfo = document.createElement('span');
     fpsInfo.innerText = `${fps.value} FPS`;
 
-    fps.oninput = () => { fpsInfo.innerText = `${fps.value} FPS`; };
+    fps.oninput = () => {
+      fpsInfo.innerText = `${fps.value} FPS`;
+    };
 
     const runAnimationBtn = document.createElement('span');
     runAnimationBtn.className = 'button';
@@ -41,16 +84,7 @@ export default class Player {
     container.appendChild(rightSidebar);
 
     runAnimationBtn.onclick = () => {
-      let i = 0;
-      const frames = document.querySelectorAll('.frame');
-      setInterval(() => {
-        if (i === frames.length) {
-          i = 0;
-        }
-        player.getContext('2d').clearRect(0, 0, player.width, player.height);
-        player.getContext('2d').drawImage(frames[i], 0, 0);
-        i++;
-      }, 1000 / fps.value);
+      this.runPlayer();
     };
 
     fullScreenBtn.onclick = () => {

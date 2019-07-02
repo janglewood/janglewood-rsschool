@@ -14,6 +14,7 @@ class App {
       penSize: 1,
       currentTool: 'PEN',
       currentFrame: 1,
+      i: 0,
     };
     this.settings = {
       canvasSize: 32,

@@ -2,3 +2,13 @@
     background-image: url('../../../assets/icons/pen.svg');
 }
 
+.pen-size-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: nowrap;
+    width: 110px;
+    margin: 20% 0;
+}
+

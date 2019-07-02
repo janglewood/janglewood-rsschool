@@ -1,4 +1,6 @@
 import './frame.css';
+import Player from '../Player/player';
+import { fips } from 'crypto';
 
 export default class Frame {
   constructor(data) {
@@ -84,6 +86,9 @@ export default class Frame {
     const cloneFrameBtn = this.createCloneFrameBtn(frameContainer, frame);
     this.createRemoveBtn(frameContainer, cloneFrameBtn);
     this.chooseCurrentFrame(frame);
+
+    // const player = new Player(this.data);
+    // player.runPlayer();
 
     return frameContainer;
   }

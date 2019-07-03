@@ -14,9 +14,10 @@ export default class DrawField {
     canvas.style.height = `${canvas.height * 20 / (this.settings.canvasSize / 32)}px`;
     canvas.style.imageRendering = 'pixelated';
     context.imageSmoothingEnabled = false;
+    canvas.style.backgroundSize = `${32 / this.settings.canvasSize * 100}%`;
   }
 
-  static clearFrame(frame) {
+  clearFrame(frame) {
     const currentFrameContext = frame.getContext('2d');
     currentFrameContext.clearRect(0, 0, frame.width, frame.height);
     return currentFrameContext;
@@ -159,7 +160,7 @@ export default class DrawField {
         drawLine(this.data);
       }
       this.data.isPaint = false;
-      const currentFrameContext = DrawField.clearFrame(document.getElementsByClassName('frame')[this.data.currentFrame - 1]);
+      const currentFrameContext = this.clearFrame(document.getElementsByClassName('frame')[this.data.currentFrame - 1]);
       currentFrameContext.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 300, 150);
       this.resetCoordsData();
     };
@@ -170,7 +171,7 @@ export default class DrawField {
         drawLine(this.data);
       }
       this.data.isPaint = false;
-      const currentFrameContext = DrawField.clearFrame(document.getElementsByClassName('frame')[this.data.currentFrame - 1]);
+      const currentFrameContext = this.clearFrame(document.getElementsByClassName('frame')[this.data.currentFrame - 1]);
       currentFrameContext.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 300, 150);
       this.resetCoordsData();
     };

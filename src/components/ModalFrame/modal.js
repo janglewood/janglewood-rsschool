@@ -8,15 +8,54 @@ export default class ModalFrame {
     this.settings = settings;
   }
 
-  render() {
-    const container = document.getElementsByClassName('page-wrapper')[0];
+  restoreData(saveCanvasSize) {
+    const currentCanvasSize = this.settings.canvasSize;
+    this.data = {
+      mainScreenIsActive: false,
+      userFileName: 'Type file name here',
+      penSize: 1,
+      currentTool: 'PEN',
+      currentFrame: 1,
+      i: 0,
+    };
+    this.settings = {
+      primaryColor: '#000000',
+      secondaryColor: '#ffffff',
+    };
+    if (!saveCanvasSize) {
+      this.settings.canvasSize = 32;
+    } else {
+      this.settings.canvasSize = currentCanvasSize;
+    }
+  }
+
+  createNewProject(saveCanvasSize) {
+    document.querySelector('.editor-container').remove();
+    if (saveCanvasSize) {
+      this.restoreData(true);
+    } else {
+      this.restoreData(false);
+    }
+    const editor = new Editor(this.data, this.settings);
+    const header = new Header(this.data);
+    header.addFileNameInput();
+    editor.render();
+    document.querySelector('.modal-frame').remove();
+    document.querySelector('.dark-layer').remove();
+  }
+
+  render(text, saveCanvasSize) {
+    const container = document.querySelector('.page-wrapper');
+
+    const darkLayer = document.createElement('span');
+    darkLayer.className = 'dark-layer';
 
     const modalFrame = document.createElement('span');
     modalFrame.className = 'modal-frame';
 
     const title = document.createElement('span');
     title.className = 'title';
-    title.innerText = 'Do you really want to create a new sprite? All changes will be lost.';
+    title.innerText = text;
 
     const buttonContainer = document.createElement('span');
     buttonContainer.className = 'button-container';
@@ -26,12 +65,11 @@ export default class ModalFrame {
     agree.innerText = 'Yes';
 
     agree.onclick = () => {
-      document.getElementsByClassName('editor-container')[0].remove();
-      const editor = new Editor(this.data, this.settings);
-      const header = new Header(this.data);
-      header.addFileNameInput();
-      editor.render();
-      document.getElementsByClassName('modal-frame')[0].remove();
+      if (saveCanvasSize) {
+        this.createNewProject(true);
+      } else {
+        this.createNewProject(false);
+      }
     };
 
     const disagree = document.createElement('span');
@@ -39,7 +77,9 @@ export default class ModalFrame {
     disagree.innerText = 'No';
 
     disagree.onclick = () => {
-      document.getElementsByClassName('modal-frame')[0].remove();
+      document.querySelector('.modal-frame').remove();
+      document.querySelector('.dark-layer').remove();
+
       return false;
     };
 
@@ -49,6 +89,7 @@ export default class ModalFrame {
     modalFrame.appendChild(title);
     modalFrame.appendChild(buttonContainer);
 
+    document.body.appendChild(darkLayer);
     container.appendChild(modalFrame);
   }
 }

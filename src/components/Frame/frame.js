@@ -1,6 +1,9 @@
 import './frame.css';
 import Player from '../Player/player';
 import DrawField from '../DrawField/drawField';
+import cloneImg from '../../assets/icons/clone.svg';
+import removeImg from '../../assets/icons/remove.svg';
+
 
 export default class Frame {
   constructor(data) {
@@ -119,7 +122,9 @@ export default class Frame {
     const canvas = document.getElementById('canvas');
     const cloneFrameBtn = document.createElement('span');
     cloneFrameBtn.classList.add('clone-frame', 'button');
-    cloneFrameBtn.innerHTML = '<img src="../../assets/icons/clone.svg">';
+    const img = document.createElement('img');
+    img.src = cloneImg;
+    cloneFrameBtn.appendChild(img);
 
     cloneFrameBtn.onclick = () => {
       const clone = this.createFrame();
@@ -134,7 +139,9 @@ export default class Frame {
   createRemoveBtn(frame) {
     const removeFrameBtn = document.createElement('span');
     removeFrameBtn.classList.add('remove-frame', 'button');
-    removeFrameBtn.innerHTML = '<img src="../../assets/icons/remove.svg">';
+    const img = document.createElement('img');
+    img.src = removeImg;
+    removeFrameBtn.appendChild(img);
 
     removeFrameBtn.onclick = () => {
       const frames = document.getElementsByClassName('frame-container');

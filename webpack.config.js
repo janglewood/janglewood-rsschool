@@ -6,12 +6,14 @@ module.exports = {
   output: {
     filename: 'app.bundle.js',
     path: path.resolve(__dirname, 'dist'),
+    publicPath: '/',
   },
   devtool: 'source-map',
   devServer: {
-    contentBase: path.resolve(__dirname, 'src'),
+    contentBase: path.resolve(__dirname),
     compress: true,
     port: 3000,
+    publicPath: '/',
   },
   module: {
     rules: [
@@ -27,6 +29,6 @@ module.exports = {
   },
   plugins: [new HtmlWebpackPlugin({
     title: 'Piskel clone',
-    template: 'src/index.html',
+    template: './src/index.html',
   })],
 };

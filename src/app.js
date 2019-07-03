@@ -47,7 +47,7 @@ document.querySelectorAll('.button.create-sprite')[0].onclick = () => {
   if (!app.state.mainScreenIsActive) {
     app.createEditor();
   } else {
-    modalFrame.render();
+    modalFrame.render('Do you really want to create a new sprite? All changes will be lost.', false);
   }
 };
 document.querySelectorAll('.button.create-sprite')[1].onclick = () => {

@@ -32,6 +32,10 @@
     bottom: 4px;
     left: 0px;
     padding: 0 5px;
+    /* background-image: url(../../assets/icons/clone.svg);
+    background-repeat: no-repeat;
+    width: 18px;
+    height: 18px; */
 }
 .clone-frame>img {
     width: 18px;

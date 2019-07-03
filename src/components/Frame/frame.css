@@ -3,6 +3,8 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+    height: 90vh;
+    margin: 10px;
     order: 2;
     position: relative;
     overflow: auto;
@@ -32,10 +34,6 @@
     bottom: 4px;
     left: 0px;
     padding: 0 5px;
-    /* background-image: url(../../assets/icons/clone.svg);
-    background-repeat: no-repeat;
-    width: 18px;
-    height: 18px; */
 }
 .clone-frame>img {
     width: 18px;

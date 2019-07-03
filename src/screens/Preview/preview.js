@@ -1,4 +1,6 @@
 import './preview.css';
+import marioImg from '../../assets/images/mario.png';
+import mushroomImg from '../../assets/images/mushroom.png';
 
 export default class Preview {
   constructor(data) {
@@ -28,7 +30,12 @@ export default class Preview {
 
     const imageContainer = document.createElement('span');
     imageContainer.className = 'image-container';
-    imageContainer.innerHTML = '<img src="../../assets/images/mario.png" /><img src="../../assets/images/mushroom.png" />';
+    const mario = document.createElement('img');
+    mario.src = marioImg;
+    imageContainer.appendChild(mario);
+    const mushroom = document.createElement('img');
+    mushroom.src = mushroomImg;
+    imageContainer.appendChild(mushroom);
 
     container.appendChild(imageContainer);
 

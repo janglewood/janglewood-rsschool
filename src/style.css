@@ -10,13 +10,10 @@
     font-family: RobotoMono;
     margin: 0;
 }
-html {
-    height: 100%;
-}
 body {
     width: 100%;
     height: 100%;
-    cursor: url(assets/icons/pen.cur), pointer;
+    /* cursor: url(assets/icons/pen.cur), pointer; */
 }
 .page-wrapper {
     display: flex;

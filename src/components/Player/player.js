@@ -27,59 +27,34 @@ export default class Player {
   }
 
   runPlayer() {
-    // // const fps = document.querySelector('input[type="range"]');
-    // // const player = document.querySelector('.player');
+    console.log(this);
     const frames = [...document.querySelectorAll('.frame')];
-    // const images = frames.map(frame => frame.toDataURL());
-    // // const prepareImage = images.map(image => this.addBackgroundColor(image, 'yellow'));
-    // GIF.createGIF({
-    //   images: images,
-    //   gifWidth: 449,
-    //   gifHeight: 449,
-    // }, (obj) => {
-    //   if (!obj.error) {
-    //     const { image } = obj;
-    //     const animatedImage = document.createElement('img');
-    //     animatedImage.src = image;
-    //     document.body.appendChild(animatedImage);
-    //   }
-    // });
-    var gif = new GIF({
+
+    const gif = new GIF({
       workers: 2,
       quality: 10,
       workerScript: './gif.worker.js',
-      // width: '500px',
-      // height: '500px',
-      background: '#fff',
-      transparent: 'rgba(0,0,0,0)'
+      width: 320,
+      height: 320,
+      transparent: 'rgba(0,0,0,0)',
+      background: 'rgba(0,0,0,0)',
     });
-    const canva = document.createElement('canvas');
-    canva.setAttribute('width', 640);
-    canva.setAttribute('height', 640);
-    // canva.style.display = 'none';
-    // canva.style.width = `${canva.width * 20 / (32 / 32)}px`;
-    // canva.style.height = `${canva.height * 20 / (32 / 32)}px`;
-    // document.body.appendChild(canva);
 
     for (let i = 0; i < frames.length; i++) {
-      gif.addFrame(frames[i]);
+      gif.addFrame(frames[i].getContext('2d'), { copy: true, delay: 2000 });
     }
 
-    // or a canva element
-    // gif.addFrame(frames[0], {delay: 200});
-    // gif.addFrame(frames[1], {delay: 200});
-
-    
-    // or copy the pixels from a canva context
-
-    // gif.addFrame(frames[1].getContext('2d'), {copy: true});
-    
-    gif.on('finished', function(blob) {
+    gif.on('finished', (blob) => {
       const img = document.createElement('img');
       img.src = URL.createObjectURL(blob);
-      document.body.appendChild(img);
+
+      img.onload = () => {
+        const player = document.querySelector('.player');
+        console.log(img);
+        document.querySelector('.right-sidebar').appendChild(img);
+      };
     });
-    
+
     gif.render();
   }
 
@@ -89,7 +64,7 @@ export default class Player {
     const rightSidebar = document.createElement('span');
     rightSidebar.className = 'right-sidebar';
 
-    const player = document.createElement('canva');
+    const player = document.createElement('canvas');
     player.className = 'player';
 
     const fps = document.createElement('input');

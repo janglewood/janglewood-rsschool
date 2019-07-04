@@ -161,7 +161,7 @@ export default class DrawField {
       }
       this.data.isPaint = false;
       const currentFrameContext = this.clearFrame(document.getElementsByClassName('frame')[this.data.currentFrame - 1]);
-      currentFrameContext.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 300, 150);
+      currentFrameContext.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, currentFrameContext.canvas.width, currentFrameContext.canvas.height);
       this.resetCoordsData();
     };
 
@@ -172,7 +172,7 @@ export default class DrawField {
       }
       this.data.isPaint = false;
       const currentFrameContext = this.clearFrame(document.getElementsByClassName('frame')[this.data.currentFrame - 1]);
-      currentFrameContext.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 300, 150);
+      currentFrameContext.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, currentFrameContext.canvas.width, currentFrameContext.canvas.height);
       this.resetCoordsData();
     };
   }

@@ -1,32 +1,38 @@
 import './player.css';
 import GIF from '../../../gif';
 
+let timer;
+
 export default class Player {
   constructor(data) {
     this.data = data;
   }
 
-  addBackgroundColor(imageURI, backgroundColor) {
-    console.log(this);
-    const image = new Image();
-    image.src = imageURI;
+  runPlayer() {
+    let i = 0;
+    const frames = [...document.querySelectorAll('.frame')];
+    const player = document.querySelector('.player');
+    const fps = document.querySelector('input[type="range"]').value;
 
-    const canva = document.createElement('canva');
-    const ctx = canva.getContext('2d');
+    function frame() {
+      const framesLength = frames.length;
+      if (i >= framesLength) {
+        i = 0;
+      }
+      player.getContext('2d').clearRect(0, 0, player.width, player.height);
+      player.getContext('2d').drawImage(frames[i], 0, 0, frames[i].width, frames[i].height, 0, 0, player.width, player.height);
+      i++;
+    }
 
-    canva.width = 449;
-    canva.height = 449;
-
-    // Add background color
-    ctx.fillStyle = backgroundColor;
-    ctx.fillRect(0, 0, canva.width, canva.height);
-
-    ctx.drawImage(image, 0, 0);
-    console.log(canva.toDataURL());
-    return canva.toDataURL();
+    timer = setInterval(frame, 1000 / fps);
+    player.onclick = () => {
+      this.data.playerOnPause = true;
+      clearInterval(timer);
+    };
+    console.log(fps);
   }
 
-  runPlayer() {
+  saveGif() {
     console.log(this);
     const frames = [...document.querySelectorAll('.frame')];
 
@@ -49,8 +55,6 @@ export default class Player {
       img.src = URL.createObjectURL(blob);
 
       img.onload = () => {
-        const player = document.querySelector('.player');
-        console.log(img);
         document.querySelector('.right-sidebar').appendChild(img);
       };
     });
@@ -98,6 +102,12 @@ export default class Player {
     runAnimationBtn.onclick = () => {
       this.runPlayer();
     };
+
+    document.querySelector('.add-frame').addEventListener('click', () => {
+      clearInterval(timer);
+      document.querySelector('.player').getContext('2d').clearRect(0, 0, document.querySelector('.player').width, document.querySelector('.player').height);
+      this.runPlayer();
+    });
 
     fullScreenBtn.onclick = () => {
       player.requestFullscreen();

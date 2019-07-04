@@ -29,8 +29,8 @@ export default class Editor {
 
     tools.render();
     drawField.render();
-    player.render();
     frame.render();
+    player.render();
     settings.render();
   }
 }

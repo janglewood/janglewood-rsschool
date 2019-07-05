@@ -1,5 +1,4 @@
 import './frame.css';
-import Player from '../Player/player';
 import DrawField from '../DrawField/drawField';
 import cloneImg from '../../assets/icons/clone.svg';
 import removeImg from '../../assets/icons/remove.svg';
@@ -163,7 +162,6 @@ export default class Frame {
 
       frame.remove();
       this.data.framesAmount--;
-      this.data.currentFrame--;
 
       for (let i = 1; i <= frames.length; i++) {
         frames[i - 1].querySelector('.frame-number').innerText = i;
@@ -181,22 +179,14 @@ export default class Frame {
   }
 
   chooseCurrentFrame(frame) {
+    const drawField = new DrawField(this.data);
     const selected = document.querySelector('.selected');
     if (selected) {
       selected.classList.remove('selected');
     }
     frame.classList.add('selected');
 
-    this.data.clickX = [];
-    this.data.clickY = [];
-    this.data.clickDrag = [];
-    this.data.clickSize = [];
-    this.data.drawColor = [];
-    this.data.startX = [];
-    this.data.startY = [];
-    this.data.lineColor = [];
-    this.data.finishX = [];
-    this.data.finishY = [];
+    drawField.resetCoordsData();
 
     if (this.data.framesAmount > 1) {
       const canvas = document.getElementById('canvas');

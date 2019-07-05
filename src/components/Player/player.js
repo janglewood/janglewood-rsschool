@@ -4,19 +4,35 @@ import GIF from '../../../gif';
 let timer;
 
 export default class Player {
-  constructor(data) {
+  constructor(data, settings) {
     this.data = data;
+    this.settings = settings;
+  }
+
+  static createDownloadBtn() {
+    const container = document.querySelector('.right-sidebar');
+    const downloadBtn = document.createElement('span');
+    downloadBtn.className = 'button';
+    downloadBtn.innerText = 'Download .gif';
+
+    downloadBtn.onclick = () => {
+      Player.saveGif(this.data);
+    };
+    container.appendChild(downloadBtn);
+  }
+
+  static getCoords(x, y) {
+    document.querySelector('.coords').innerText = `[${x}:${y}]`;
   }
 
   runPlayer() {
     let i = 0;
-    const frames = [...document.querySelectorAll('.frame')];
     const player = document.querySelector('.player');
     const fps = document.querySelector('input[type="range"]').value;
 
     function frame() {
-      const framesLength = frames.length;
-      if (i >= framesLength) {
+      const frames = [...document.querySelectorAll('.frame')];
+      if (i >= frames.length) {
         i = 0;
       }
       player.getContext('2d').clearRect(0, 0, player.width, player.height);
@@ -29,11 +45,9 @@ export default class Player {
       this.data.playerOnPause = true;
       clearInterval(timer);
     };
-    console.log(fps);
   }
 
-  saveGif() {
-    console.log(this);
+  static saveGif(data) {
     const frames = [...document.querySelectorAll('.frame')];
 
     const gif = new GIF({
@@ -51,15 +65,20 @@ export default class Player {
     }
 
     gif.on('finished', (blob) => {
-      const img = document.createElement('img');
-      img.src = URL.createObjectURL(blob);
-
-      img.onload = () => {
-        document.querySelector('.right-sidebar').appendChild(img);
-      };
+      const downloadGif = document.createElement('a');
+      downloadGif.href = URL.createObjectURL(blob);
+      downloadGif.download = `${data.userFileName}.gif`;
+      downloadGif.click();
     });
 
     gif.render();
+  }
+
+  resetAnimation() {
+    const player = document.querySelector('.player');
+    clearInterval(timer);
+    player.getContext('2d').clearRect(0, 0, player.width, player.height);
+    this.runPlayer();
   }
 
   render() {
@@ -82,7 +101,11 @@ export default class Player {
 
     fps.oninput = () => {
       fpsInfo.innerText = `${fps.value} FPS`;
+      this.resetAnimation();
     };
+
+    const coords = document.createElement('span');
+    coords.className = 'coords';
 
     const runAnimationBtn = document.createElement('span');
     runAnimationBtn.className = 'button';
@@ -97,16 +120,34 @@ export default class Player {
     rightSidebar.appendChild(fps);
     rightSidebar.appendChild(fpsInfo);
     rightSidebar.appendChild(player);
+    rightSidebar.appendChild(coords);
     container.appendChild(rightSidebar);
+    Player.createDownloadBtn();
 
     runAnimationBtn.onclick = () => {
       this.runPlayer();
     };
 
     document.querySelector('.add-frame').addEventListener('click', () => {
-      clearInterval(timer);
-      document.querySelector('.player').getContext('2d').clearRect(0, 0, document.querySelector('.player').width, document.querySelector('.player').height);
-      this.runPlayer();
+      this.resetAnimation();
+    });
+
+    document.querySelector('#canvas').addEventListener('mouseup', () => {
+      if (this.data.framesAmount === 1) {
+        this.resetAnimation();
+      }
+    });
+    document.querySelector('#canvas').addEventListener('mouseleave', () => {
+      if (this.data.framesAmount === 1) {
+        this.resetAnimation();
+      }
+    });
+    document.querySelector('#canvas').addEventListener('mousemove', (e) => {
+      const canvas = document.querySelector('#canvas');
+      const x = Math.round((e.pageX - canvas.offsetLeft) / 20);
+      const y = Math.round((e.pageY - canvas.offsetTop) / 20);
+
+      Player.getCoords(x, y);
     });
 
     fullScreenBtn.onclick = () => {

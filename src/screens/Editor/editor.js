@@ -16,7 +16,7 @@ export default class Editor {
     const tools = new Tools(this.data, this.settings);
     const frame = new Frame(this.data);
     const drawField = new DrawField(this.data, this.settings);
-    const player = new Player(this.data);
+    const player = new Player(this.data, this.settings);
     const settings = new Settings(this.data, this.settings);
 
     if (document.getElementsByClassName('preview')[0]) {

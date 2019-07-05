@@ -18,6 +18,7 @@ export default class Settings {
 
     for (let i = 32; i <= 128; i *= 2) {
       const sizeItem = document.createElement('span');
+      sizeItem.className = 'button';
       sizeItem.innerText = `${i}x${i}`;
       sizeItem.onclick = () => {
         const modalFrame = new ModalFrame(this.data, this.settings);

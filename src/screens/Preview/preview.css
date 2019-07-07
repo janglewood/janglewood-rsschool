@@ -31,12 +31,21 @@
     align-self: center;
     font-size: 26px;
     font-weight: bold;
+    text-decoration: none;
 }
 .image-container {
     display: flex;
+    margin-top: 200px;
 }
 .image-container>:nth-child(2) {
     position: relative;
     top: 60px;
     left: -20px;
+}
+.about {
+    display: flex;
+    margin-top: 500px;
+    margin-bottom: 50px;
+    width: 80%;
+    font-size: 20px;
 }

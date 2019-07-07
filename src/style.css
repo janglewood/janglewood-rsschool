@@ -13,7 +13,7 @@
 body {
     width: 100%;
     height: 100%;
-    /* cursor: url(assets/icons/pen.cur), pointer; */
+    scroll-behavior: smooth;
 }
 .page-wrapper {
     display: flex;
@@ -21,6 +21,8 @@ body {
     width: 100%;
     height: 100%;
     background-color: #181818a3;
+    scroll-behavior: smooth;
+
 }
 .button {
     display: flex;

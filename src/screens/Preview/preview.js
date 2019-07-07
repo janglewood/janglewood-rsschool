@@ -22,7 +22,7 @@ export default class Preview {
 
     const faqBtn = document.createElement('span');
     faqBtn.className = 'button';
-    faqBtn.innerText = 'FAQ';
+    faqBtn.innerText = 'About';
 
     actionContainer.appendChild(createSpriteBtn);
     actionContainer.appendChild(faqBtn);

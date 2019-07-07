@@ -108,26 +108,17 @@ export default class Player {
     const coords = document.createElement('span');
     coords.className = 'coords';
 
-    const runAnimationBtn = document.createElement('span');
-    runAnimationBtn.className = 'button';
-    runAnimationBtn.innerText = 'Run animation';
-
     const fullScreenBtn = document.createElement('span');
     fullScreenBtn.className = 'button';
     fullScreenBtn.innerText = 'Full screen';
 
+    container.appendChild(rightSidebar);
     rightSidebar.appendChild(fullScreenBtn);
-    rightSidebar.appendChild(runAnimationBtn);
     rightSidebar.appendChild(fps);
     rightSidebar.appendChild(fpsInfo);
     rightSidebar.appendChild(player);
-    rightSidebar.appendChild(coords);
-    container.appendChild(rightSidebar);
     Player.createDownloadBtn(this.data);
-
-    runAnimationBtn.onclick = () => {
-      this.runPlayer();
-    };
+    rightSidebar.appendChild(coords);
 
     document.querySelector('.add-frame').addEventListener('click', () => {
       this.resetAnimation();

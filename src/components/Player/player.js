@@ -9,14 +9,14 @@ export default class Player {
     this.settings = settings;
   }
 
-  static createDownloadBtn() {
+  static createDownloadBtn(data) {
     const container = document.querySelector('.right-sidebar');
     const downloadBtn = document.createElement('span');
     downloadBtn.className = 'button';
     downloadBtn.innerText = 'Download .gif';
 
     downloadBtn.onclick = () => {
-      Player.saveGif(this.data);
+      Player.saveGif(data);
     };
     container.appendChild(downloadBtn);
   }
@@ -56,18 +56,19 @@ export default class Player {
       workerScript: './gif.worker.js',
       width: 320,
       height: 320,
-      transparent: 'rgba(0,0,0,0)',
-      background: 'rgba(0,0,0,0)',
+      transparent: 0x000000,
+      background: 0x000000,
     });
 
-    for (let i = 0; i < frames.length; i++) {
-      gif.addFrame(frames[i].getContext('2d'), { copy: true, delay: 2000 });
-    }
+    const fps = document.querySelector('input[type="range"]').value;
 
+    for (let i = 0; i < frames.length; i++) {
+      gif.addFrame(frames[i].getContext('2d'), { copy: true, delay: 1000 / fps });
+    }
     gif.on('finished', (blob) => {
       const downloadGif = document.createElement('a');
       downloadGif.href = URL.createObjectURL(blob);
-      downloadGif.download = `${data.userFileName}.gif`;
+      downloadGif.download = data.userFileName === 'Type file name here' ? 'New sprite.gif' : `${data.userFileName}.gif`;
       downloadGif.click();
     });
 
@@ -122,7 +123,7 @@ export default class Player {
     rightSidebar.appendChild(player);
     rightSidebar.appendChild(coords);
     container.appendChild(rightSidebar);
-    Player.createDownloadBtn();
+    Player.createDownloadBtn(this.data);
 
     runAnimationBtn.onclick = () => {
       this.runPlayer();
